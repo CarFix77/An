@@ -1,1 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Треки по жанрам</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px 0 40px;
+            position: relative;
+        }
 
+        /* ===== МНОГОСЛОЙНОЕ РАЗМЫТОЕ ПЯТНО (по мотивам скрина) ===== */
+        #background-spots {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: visible;
+            display: block;
+            /* смешивание слоёв */
+            mix-blend-mode: screen;
+        }
+
+        /* контейнер центра */
+        .blob-centre {
+            position: absolute;
+            left: 50%;
+            top: 30%;
+            transform: translate(-50%, -30%);
+            width: min(60vmin, 560px);
+            height: min(60vmin, 560px);
+            pointer-events: none;
+            z-index: 0;
+            filter: none;
+        }
+
+        /* общее для слоёв */
+        .blob-layer {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            mix-blend-mode: screen;
+            will-change: transform, border-radius, opacity, filter;
+        }
+
+        /* слои: центр, средний, внешний */
+        .layer-1 { /* центр — яркий */
+            width: 100%;
+            height: 100%;
+            left: 0; top: 0;
+            filter: blur(36px) saturate(120%);
+            opacity: 1;
+            z-index: 3;
+            animation: float1 10s ease-in-out infinite;
+        }
+        .layer-2 { /* средний — окрашивает края */
+            width: 110%;
+            height: 110%;
+            left: -5%;
+            top: -5%;
+            filter: blur(72px) saturate(120%);
+            opacity: 0.9;
+            z-index: 2;
+            animation: float2 14s ease-in-out infinite;
+        }
+        .layer-3 { /* внешний — мягкий ореол */
+            width: 130%;
+            height: 130%;
+            left: -15%;
+            top: -15%;
+            filter: blur(110px) saturate(120%);
+            opacity: 0.85;
+            z-index: 1;
+            animation: float3 18s ease-in-out infinite;
+        }
+
+        /* морфинг границ (border-radius) + небольшие перемещения */
+        @keyframes float1 {
+            0% { transform: translate(0px, 0px) scale(1); border-radius: 48% 52% 45% 55% / 52% 45% 55% 48%; }
+            25% { transform: translate(14px, -10px) scale(1.03); border-radius: 42% 58% 40% 60% / 50% 42% 58% 50%; }
+            50% { transform: translate(-16px, 8px) scale(0.98); border-radius: 55% 45% 60% 40% / 44% 60% 40% 56%; }
+            75% { transform: translate(8px, 12px) scale(1.02); border-radius: 50% 50% 45% 55% / 48% 50% 55% 47%; }
+            100% { transform: translate(0px, 0px) scale(1); border-radius: 48% 52% 45% 55% / 52% 45% 55% 48%; }
+        }
+        @keyframes float2 {
+            0% { transform: translate(0px, 0px) scale(1); border-radius: 45% 55% 50% 50% / 50% 48% 52% 50%; }
+            25% { transform: translate(-18px, 6px) scale(1.02); border-radius: 60% 40% 45% 55% / 40% 60% 50% 50%; }
+            50% { transform: translate(12px, -16px) scale(0.98); border-radius: 50% 50% 55% 45% / 55% 50% 45% 50%; }
+            75% { transform: translate(-6px, -8px) scale(1.01); border-radius: 46% 54% 50% 50% / 48% 52% 50% 50%; }
+            100% { transform: translate(0px, 0px) scale(1); border-radius: 45% 55% 50% 50% / 50% 48% 52% 50%; }
+        }
+        @keyframes float3 {
+            0% { transform: translate(0px, 0px) scale(1); border-radius: 50% 50% 48% 52% / 50% 52% 48% 50%; }
+            25% { transform: translate(22px, -18px) scale(1.03); border-radius: 42% 58% 60% 40% / 60% 40% 50% 50%; }
+            50% { transform: translate(-20px, 18px) scale(0.97); border-radius: 55% 45% 50% 50% / 50% 45% 55% 50%; }
+            75% { transform: translate(8px, -6px) scale(1.02); border-radius: 52% 48% 55% 45% / 48% 50% 52% 50%; }
+            100% { transform: translate(0px, 0px) scale(1); border-radius: 50% 50% 48% 52% / 50% 52% 48% 50%; }
+        }
+
+        /* тонкая мягкая подсветка всей области */
+        #background-spots::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(40% 30% at 50% 35%, rgba(255,220,160,0.03), transparent 30%);
+        }
+
+        /* ===== КОНТЕНТ ===== */
+        .page-header { padding: 0 20px 6px; position: relative; z-index: 2; }
+        .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+
+        .genre-list {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 16px 20px 12px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            position: relative;
+            z-index: 2;
+            -ms-overflow-style: none;
+        }
+        .genre-list::-webkit-scrollbar { display: none; }
+
+        .genre-item {
+            background: transparent;
+            color: #fff;
+            opacity: 0.5;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(4px);
+            user-select: none;
+        }
+        .genre-item.active {
+            opacity: 1;
+            border-color: var(--spot-color, #FF3B30);
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--spot-color, #FF3B30);
+        }
+
+        .music-container {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding: 10px 15px 30px 15px;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            cursor: grab;
+            user-select: none;
+            position: relative;
+            z-index: 2;
+            scroll-padding: 0;
+            -ms-overflow-style: none;
+        }
+        .music-container::-webkit-scrollbar { display: none; }
+
+        .tracks-column-genre {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 340px;
+            min-width: 340px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+        }
+
+        .genre-track-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            padding: 6px 0;
+            border-radius: 12px;
+            background: transparent;
+            border: none;
+        }
+
+        .track-cover-wrapper {
+            position: relative;
+            width: 62px;
+            height: 62px;
+            flex-shrink: 0;
+        }
+        .track-cover {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+            transition: filter 0.3s ease;
+        }
+        .genre-track-item.is-playing .track-cover { filter: brightness(0.4); }
+        .playing-indicator {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display:flex; justify-content:center; align-items:center; gap:4px;
+            border-radius: 8px; opacity: 0; transition: opacity 0.3s ease;
+            background: rgba(0,0,0,0.2);
+        }
+        .genre-track-item.is-playing .playing-indicator { opacity: 1; }
+        .playing-indicator .bar { width: 4px; height: 20%; background-color:#fff; border-radius:2px; }
+        @keyframes play-anim { 0%,100%{transform:scaleY(0.5);}50%{transform:scaleY(1.5);} }
+        .genre-track-item.is-playing .bar { animation: play-anim 1.2s ease-in-out infinite; }
+        .genre-track-item.is-playing .bar:nth-child(2) { animation-delay: 0.2s; }
+        .genre-track-item.is-playing .bar:nth-child(3) { animation-delay: 0.4s; }
+        .genre-track-item.is-playing .bar:nth-child(4) { animation-delay: 0.1s; }
+
+        .track-info { flex: 1; min-width: 0; }
+        .track-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+        .track-meta { font-size: 13px; color: #b3b3b3; display:flex; align-items:center; gap:6px; }
+
+        .genre-track-options {
+            color: rgba(255,255,255,0.5);
+            font-size: 20px;
+            padding: 0 10px 0 30px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            letter-spacing: 2px;
+            line-height: 1;
+            display:inline-flex; align-items:center; justify-content:center; margin-left:auto;
+        }
+        .genre-track-options:hover { color: rgba(255,255,255,0.8); }
+    </style>
+</head>
+<body>
+
+    <!-- МНОГОСЛОЙНОЕ ПЯТНО -->
+    <div id="background-spots">
+        <div class="blob-centre" id="blobCentre" aria-hidden="true">
+            <div class="blob-layer layer-3" id="layer3"></div>
+            <div class="blob-layer layer-2" id="layer2"></div>
+            <div class="blob-layer layer-1" id="layer1"></div>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <div class="page-title">Треки по жанрам</div>
+    </div>
+
+    <div class="genre-list" id="genreList">
+        <button class="genre-item active" data-color="#FF3B30">Рок</button>
+        <button class="genre-item" data-color="#9D00FF">Фонк</button>
+        <button class="genre-item" data-color="#00A86B">Фолк</button>
+        <button class="genre-item" data-color="#007AFF">Хип-хоп</button>
+        <button class="genre-item" data-color="#FF2D55">Поп</button>
+        <button class="genre-item" data-color="#FF9500">Джаз</button>
+        <button class="genre-item" data-color="#32D74B">Инди</button>
+        <button class="genre-item" data-color="#AF52DE">Метал</button>
+        <button class="genre-item" data-color="#5AC8FA">Электроника</button>
+        <button class="genre-item" data-color="#FFCC00">R&B</button>
+        <button class="genre-item" data-color="#8E8E93">Лоу-фай</button>
+    </div>
+
+    <div class="music-container" id="musicContainer"></div>
+
+    <script>
+        // ===== цвета / данные как раньше =====
+        const genreColors = {
+            'Рок': '#FF3B30','Фонк': '#9D00FF','Фолк': '#00A86B','Хип-хоп': '#007AFF',
+            'Поп': '#FF2D55','Джаз': '#FF9500','Инди': '#32D74B','Метал': '#AF52DE',
+            'Электроника': '#5AC8FA','R&B': '#FFCC00','Лоу-фай': '#8E8E93'
+        };
+
+        // тестовые фото и данные оставлены без изменений (копируйте из вашего оригинала при необходимости)
+        const testImages = [
+            'https://picsum.photos/id/100/400/400',
+            'https://picsum.photos/id/101/400/400',
+            'https://picsum.photos/id/102/400/400',
+            'https://picsum.photos/id/103/400/400',
+            'https://picsum.photos/id/104/400/400',
+            'https://picsum.photos/id/105/400/400'
+        ];
+
+        const musicData = {
+            "Рок":[{n:"ПОСЛЕДНИЙ NOTHING",a:"Toxi$, MORGENSHTERN",img:testImages[0]},{n:"ПОД КОЖУ",a:"Райни",img:testImages[1]},{n:"ТЫ НИЧЕГО НЕ ПОНЯЛА",a:"choldd",img:testImages[2]},{n:"NUMB",a:"Linkin Park",img:testImages[3]},{n:"DU HAST",a:"Rammstein",img:testImages[4]},{n:"SMELLS LIKE",a:"Nirvana",img:testImages[5]}],
+            "Фонк":[{n:"MURDER IN MY MIND",a:"Kordhell",img:testImages[0]},{n:"SAHARA",a:"Hensonn",img:testImages[1]},{n:"METAMORPHOSIS",a:"INTERWORLD",img:testImages[2]},{n:"OVERRIDE",a:"KSLV Noh",img:testImages[3]},{n:"AVALON",a:"$uicideboy$",img:testImages[4]},{n:"SCARY GARY",a:"Kaito Shoma",img:testImages[5]}],
+            "Фолк":[{n:"КАЛИНКА",a:"Иван Купала",img:testImages[0]},{n:"ВО ПОЛЕ БЕРЕЗА",a:"Пелагея",img:testImages[1]},{n:"ОЙ, ТО НЕ ВЕЧЕР",a:"Мельница",img:testImages[2]},{n:"КОНЬ",a:"Любэ",img:testImages[3]},{n:"ЧЁРНЫЙ ВОРОН",a:"Алиса",img:testImages[4]},{n:"ТРАВА У ДОМА",a:"Земляне",img:testImages[5]}],
+            "Хип-хоп":[{n:"GODZILLA",a:"Eminem",img:testImages[0]},{n:"SICKO MODE",a:"Travis Scott",img:testImages[1]},{n:"HUMBLE",a:"Kendrick Lamar",img:testImages[2]},{n:"STARBOY",a:"The Weeknd",img:testImages[3]},{n:"INDUSTRY BABY",a:"Lil Nas X",img:testImages[4]},{n:"MONTERO",a:"Lil Nas X",img:testImages[5]}],
+            "Поп":[{n:"BLINDING LIGHTS",a:"The Weeknd",img:testImages[0]},{n:"LEVITATING",a:"Dua Lipa",img:testImages[1]},{n:"BAD GUY",a:"Billie Eilish",img:testImages[2]},{n:"DRIVERS LICENSE",a:"Olivia Rodrigo",img:testImages[3]},{n:"AS IT WAS",a:"Harry Styles",img:testImages[4]},{n:"SHAPE OF YOU",a:"Ed Sheeran",img:testImages[5]}],
+            "Джаз":[{n:"TAKE FIVE",a:"Dave Brubeck",img:testImages[0]},{n:"SO WHAT",a:"Miles Davis",img:testImages[1]},{n:"FEELING GOOD",a:"Nina Simone",img:testImages[2]},{n:"FLY ME TO THE MOON",a:"Frank Sinatra",img:testImages[3]},{n:"MY FUNNY VALENTINE",a:"Chet Baker",img:testImages[4]},{n:"AUTUMN LEAVES",a:"Bill Evans",img:testImages[5]}],
+            "Инди":[{n:"DOG DAYS ARE OVER",a:"Florence + The Machine",img:testImages[0]},{n:"HOLOCENE",a:"Bon Iver",img:testImages[1]},{n:"ELECTRIC FEEL",a:"MGMT",img:testImages[2]},{n:"WEIGHTY GHOST",a:"Westerman",img:testImages[3]},{n:"APOCALYPSE",a:"Cigarettes After Sex",img:testImages[4]},{n:"SWEET",a:"Cigarettes After Sex",img:testImages[5]}],
+            "Метал":[{n:"MASTER OF PUPPETS",a:"Metallica",img:testImages[0]},{n:"PARANOID",a:"Black Sabbath",img:testImages[1]},{n:"HALLOWED BE THY NAME",a:"Iron Maiden",img:testImages[2]},{n:"PAIN KILLER",a:"Judas Priest",img:testImages[3]},{n:"RAINING BLOOD",a:"Slayer",img:testImages[4]},{n:"DUALITY",a:"Slipknot",img:testImages[5]}],
+            "Электроника":[{n:"STROBE",a:"deadmau5",img:testImages[0]},{n:"OPUS",a:"Eric Prydz",img:testImages[1]},{n:"ANIMALS",a:"Martin Garrix",img:testImages[2]},{n:"LEVELS",a:"Avicii",img:testImages[3]},{n:"SANDSTORM",a:"Darude",img:testImages[4]},{n:"CLARITY",a:"Zedd",img:testImages[5]}],
+            "R&B":[{n:"BLAME IT",a:"Jamie Foxx",img:testImages[0]},{n:"ORDINARY PEOPLE",a:"John Legend",img:testImages[1]},{n:"UMBRELLA",a:"Rihanna",img:testImages[2]},{n:"NO ONE",a:"Alicia Keys",img:testImages[3]},{n:"WE BELONG TOGETHER",a:"Mariah Carey",img:testImages[4]},{n:"IRREPLACEABLE",a:"Beyoncé",img:testImages[5]}],
+            "Лоу-фай":[{n:"SNOWFALL",a:"Øneheart",img:testImages[0]},{n:"LOFI HIP HOP BEATS",a:"Chillhop",img:testImages[1]},{n:"STUDY BEATS",a:"Lofi Girl",img:testImages[2]},{n:"RAINY NIGHT",a:"Lofi Fruits",img:testImages[3]},{n:"DREAMS",a:"Lofi Fruits",img:testImages[4]},{n:"MEMORIES",a:"Lofi Fruits",img:testImages[5]}]
+        };
+
+        // ===== state & DOM =====
+        let currentPlayingTrackId = null;
+        let activeGenre = 'Рок';
+        const layer1 = document.getElementById('layer1');
+        const layer2 = document.getElementById('layer2');
+        const layer3 = document.getElementById('layer3');
+        const blobCentre = document.getElementById('blobCentre');
+        const musicContainer = document.getElementById('musicContainer');
+
+        // ===== helper: generate 2 other tones from main hex =====
+        function hexToRgb(hex) {
+            const h = hex.replace('#','');
+            const bigint = parseInt(h,16);
+            return { r: (bigint>>16)&255, g:(bigint>>8)&255, b: bigint&255 };
+        }
+        function rgbaString(hex, a=1) {
+            const c = hexToRgb(hex);
+            return `rgba(${c.r}, ${c.g}, ${c.b}, ${a})`;
+        }
+        function mixHex(hexA, hexB, t=0.5) {
+            const a = hexToRgb(hexA), b = hexToRgb(hexB);
+            const r = Math.round(a.r + (b.r - a.r)*t);
+            const g = Math.round(a.g + (b.g - a.g)*t);
+            const bl = Math.round(a.b + (b.b - a.b)*t);
+            return `rgb(${r},${g},${bl})`;
+        }
+        function lighten(hex, amount=0.2) {
+            const c = hexToRgb(hex);
+            const r = Math.round(c.r + (255-c.r)*amount);
+            const g = Math.round(c.g + (255-c.g)*amount);
+            const b = Math.round(c.b + (255-c.b)*amount);
+            return `rgb(${r},${g},${b})`;
+        }
+        // вторичный акцент (фиолет) — фиксированно добавляем для красивого рендера
+        const accent = '#AF2D8A';
+
+        // ===== Установка фоновых градиентов для слоя =====
+        function applyBlobColors(mainHex) {
+            // слой 1 — центр: яркий, ближе к основному цвету, более насыщенный
+            const center = rgbaString(mainHex, 1.0);
+            const centerInner = lighten(mainHex, 0.35);
+            layer1.style.background = `radial-gradient(circle at 48% 42%, ${centerInner} 0%, ${center} 35%, rgba(255,255,255,0) 70%)`;
+
+            // слой 2 — середина: смешиваем основной с акцентом
+            const mid = mixHex(mainHex, accent, 0.35);
+            layer2.style.background = `radial-gradient(circle at 60% 30%, ${mid} 0%, ${mixHex(mainHex,'#000',0.1)} 40%, rgba(0,0,0,0) 80%)`;
+
+            // слой 3 — внешний: более холодный/зелёный край (чуть смешаем с зелёным)
+            const outer = mixHex(mainHex, '#32D74B', 0.45);
+            layer3.style.background = `radial-gradient(circle at 35% 70%, ${outer} 0%, rgba(0,0,0,0) 55%)`;
+
+            // тень/свечение контейнера зависит от основного цвета
+            blobCentre.style.filter = `drop-shadow(0 0 48px ${rgbaString(mainHex,0.45)})`;
+        }
+
+        // ===== режимы (нейтраль/жанр) =====
+        function setNeutralMode() {
+            // более спокойный вариант — центр оранжево-жёлтый
+            applyBlobColors('#E85A2C');
+            document.documentElement.style.removeProperty('--spot-color');
+        }
+        function setGenreMode(color) {
+            applyBlobColors(color);
+            document.documentElement.style.setProperty('--spot-color', color);
+        }
+
+        // ===== render tracks (как раньше) =====
+        function renderGenreTracks(genre) {
+            musicContainer.innerHTML = '';
+            const tracks = musicData[genre] || [];
+            if (tracks.length === 0) {
+                musicContainer.innerHTML = '<div style="color: rgba(255,255,255,0.3); padding: 20px;">Нет треков</div>';
+                return;
+            }
+            const tracksPerColumn = 3;
+            const columnCount = Math.ceil(tracks.length / tracksPerColumn);
+
+            for (let colIndex = 0; colIndex < columnCount; colIndex++) {
+                const column = document.createElement('div');
+                column.className = 'tracks-column-genre';
+                const start = colIndex * tracksPerColumn;
+                const end = Math.min(start + tracksPerColumn, tracks.length);
+                const columnTracks = tracks.slice(start, end);
+
+                columnTracks.forEach(t => {
+                    const trackElem = document.createElement('div');
+                    trackElem.className = 'genre-track-item';
+                    trackElem.dataset.trackName = t.n;
+
+                    const coverWrapper = document.createElement('div');
+                    coverWrapper.className = 'track-cover-wrapper';
+                    coverWrapper.innerHTML = `
+                        <img src="${t.img}" class="track-cover" alt="${t.n}">
+                        <div class="playing-indicator">
+                            <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                        </div>
+                    `;
+
+                    const trackInfo = document.createElement('div');
+                    trackInfo.className = 'track-info';
+                    trackInfo.innerHTML = `<div class="track-name">${escapeHtml(t.n)}</div><div class="track-meta">${escapeHtml(t.a)}</div>`;
+
+                    const optionsBtn = document.createElement('button');
+                    optionsBtn.className = 'genre-track-options';
+                    optionsBtn.textContent = '⋯';
+                    optionsBtn.onclick = (e) => { e.stopPropagation(); console.log(`Действие для трека "${t.n}"`); };
+
+                    trackElem.appendChild(coverWrapper);
+                    trackElem.appendChild(trackInfo);
+                    trackElem.appendChild(optionsBtn);
+
+                    trackElem.addEventListener('click', function() {
+                        document.querySelectorAll('.genre-track-item').forEach(el => el.classList.remove('is-playing'));
+                        this.classList.add('is-playing');
+                        currentPlayingTrackId = t.n;
+                        console.log(`▶ Воспроизведение: ${t.n} — ${t.a}`);
+                    });
+
+                    column.appendChild(trackElem);
+                });
+                musicContainer.appendChild(column);
+            }
+
+            if (currentPlayingTrackId) {
+                document.querySelectorAll('.genre-track-item').forEach(el => {
+                    const name = el.querySelector('.track-name')?.textContent;
+                    if (name === currentPlayingTrackId) el.classList.add('is-playing');
+                });
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // ===== переключение жанров (как раньше) =====
+        function setupGenreSwitching() {
+            const buttons = document.querySelectorAll('.genre-item');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const genreName = this.textContent;
+                    const color = this.dataset.color;
+
+                    if (this.classList.contains('active')) {
+                        buttons.forEach(b => b.classList.remove('active'));
+                        setNeutralMode();
+                        activeGenre = null;
+                        return;
+                    }
+
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    setGenreMode(color);
+                    activeGenre = genreName;
+                    renderGenreTracks(genreName);
+
+                    const btnLeft = this.offsetLeft;
+                    const btnWidth = this.offsetWidth;
+                    const listWidth = this.parentElement.clientWidth;
+                    this.parentElement.scrollTo({ left: btnLeft - listWidth/2 + btnWidth/2, behavior: 'smooth' });
+
+                    musicContainer.scrollTo({ left: 0, behavior: 'smooth' });
+                });
+            });
+        }
+
+        // ===== init =====
+        document.addEventListener('DOMContentLoaded', () => {
+            const defaultGenre = 'Рок';
+            const defaultColor = genreColors[defaultGenre] || '#E85A2C';
+            setGenreMode(defaultColor);
+            renderGenreTracks(defaultGenre);
+            setupGenreSwitching();
+        });
+    </script>
+</body>
+</html>
