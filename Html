@@ -1,326 +1,3374 @@
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Треки по жанрам</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>Vex VPN</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.2.3/css/flag-icons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body {
-            background: #050505;
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-            padding: 20px 0 40px;
-            position: relative;
+        /* ============================================================
+           CSS CUSTOM PROPERTIES — ТЁМНАЯ И СВЕТЛАЯ ТЕМЫ
+           ============================================================ */
+        :root {
+            --bg-app-start: #0a0a0a;
+            --bg-app-mid: #0f0f1a;
+            --bg-app-end: #050508;
+            --bg-app-radial-1: rgba(74, 122, 255, 0.10);
+            --bg-app-radial-2: rgba(123, 108, 255, 0.06);
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --bg-card-active: rgba(255, 255, 255, 0.09);
+            --bg-btn: rgba(255, 255, 255, 0.05);
+            --bg-btn-hover: rgba(255, 255, 255, 0.10);
+            --bg-ring: #13192d;
+            --bg-ring-bg: #1f2740;
+            --bg-inner: #141c2e;
+            --bg-server-card: rgba(255, 255, 255, 0.03);
+            --bg-server-card-hover: rgba(255, 255, 255, 0.06);
+            --bg-server-container: rgba(6, 42, 94, 0.6);
+            --bg-server-container-hover: rgba(6, 42, 94, 0.75);
+            --bg-modal: rgba(0, 0, 0, 0.7);
+            --bg-bottom-nav: rgba(10, 10, 20, 0.75);
+
+            --text-primary: #ffffff;
+            --text-secondary: #7a84a0;
+            --text-muted: rgba(255, 255, 255, 0.35);
+            --text-inverted: #0a0e1a;
+            --text-pill: #b0b8d0;
+
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-subtle2: rgba(255, 255, 255, 0.07);
+            --border-subtle3: rgba(255, 255, 255, 0.04);
+
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+            --shadow-btn: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-pill: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-modal: 0 -8px 40px rgba(0, 0, 0, 0.6);
+            --shadow-nav: 0 -4px 24px rgba(0, 0, 0, 0.4);
+
+            --accent-primary: #4a7aff;
+            --accent-primary-glow: rgba(74, 122, 255, 0.35);
+            --accent-secondary: #3a5fd5;
+            --accent-purple: #7c4dff;
+            --accent-purple-glow: rgba(124, 77, 255, 0.4);
+
+            --status-connected: #00e676;
+            --status-disconnected: #ff6a6a;
+            --status-warning: #ffeb3b;
+
+            --premium-gold: #ffd700;
+            --premium-gold-dim: rgba(255, 215, 0, 0.06);
+            --premium-gold-border: rgba(255, 215, 0, 0.45);
+
+            --gradient-logo: linear-gradient(135deg, #4a7aff, #3a5fd5);
+            --gradient-add-btn: linear-gradient(135deg, #4a7aff, #3a5fd5);
+
+            --scrollbar-thumb: rgba(255, 255, 255, 0.08);
+            --backdrop-blur: blur(8px);
+            --backdrop-blur-light: blur(4px);
+            --power-ring-active: 0 0 40px rgba(74, 122, 255, 0.35);
+            --power-inner-shadow: inset 0 5px 20px rgba(0, 0, 0, 0.7);
+            --power-inner-shadow-active: inset 0 5px 30px rgba(0, 0, 0, 0.8), 0 0 30px rgba(74, 122, 255, 0.08);
+
+            /* Для нижней панели */
+            --nav-bg: rgba(255, 255, 255, 0.06);
+            --nav-icon-color: var(--text-secondary);
+            --nav-icon-active: var(--accent-primary);
+            --nav-label-color: var(--text-secondary);
+            --nav-label-active: var(--text-primary);
+            --nav-indicator-bg: rgba(74, 122, 255, 0.15);
         }
 
-        /* ===== МНОГОСПОТНЫЙ ФОН (несколько наложенных пятен) ===== */
-        #background-spots {
+        /* ===== СВЕТЛАЯ ТЕМА ===== */
+        [data-theme="light"] {
+            --bg-app-start: #f0f2f8;
+            --bg-app-mid: #e8ecf5;
+            --bg-app-end: #dce0ec;
+            --bg-app-radial-1: rgba(74, 122, 255, 0.08);
+            --bg-app-radial-2: rgba(123, 108, 255, 0.04);
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --bg-card-hover: rgba(255, 255, 255, 0.85);
+            --bg-card-active: rgba(74, 122, 255, 0.08);
+            --bg-btn: rgba(0, 0, 0, 0.04);
+            --bg-btn-hover: rgba(0, 0, 0, 0.08);
+            --bg-ring: #d0d8e8;
+            --bg-ring-bg: #e8ecf5;
+            --bg-inner: #f0f4ff;
+            --bg-server-card: rgba(255, 255, 255, 0.7);
+            --bg-server-card-hover: rgba(255, 255, 255, 0.9);
+            --bg-server-container: rgba(255, 255, 255, 0.7);
+            --bg-server-container-hover: rgba(255, 255, 255, 0.85);
+            --bg-modal: rgba(0, 0, 0, 0.4);
+            --bg-bottom-nav: rgba(255, 255, 255, 0.7);
+
+            --text-primary: #0a0e1a;
+            --text-secondary: #4a5070;
+            --text-muted: rgba(0, 0, 0, 0.30);
+            --text-inverted: #ffffff;
+            --text-pill: #3a4060;
+
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-subtle2: rgba(0, 0, 0, 0.08);
+            --border-subtle3: rgba(0, 0, 0, 0.04);
+
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --shadow-btn: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-pill: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-modal: 0 -8px 40px rgba(0, 0, 0, 0.12);
+            --shadow-nav: 0 -4px 24px rgba(0, 0, 0, 0.06);
+
+            --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+            --power-ring-active: 0 0 40px rgba(74, 122, 255, 0.20);
+            --power-inner-shadow: inset 0 5px 20px rgba(0, 0, 0, 0.05);
+            --power-inner-shadow-active: inset 0 5px 30px rgba(0, 0, 0, 0.06), 0 0 30px rgba(74, 122, 255, 0.05);
+
+            --bg-app-radial-1: rgba(74, 122, 255, 0.06);
+            --bg-app-radial-2: rgba(123, 108, 255, 0.03);
+
+            --gradient-add-btn: linear-gradient(135deg, #4a7aff, #3a5fd5);
+
+            --bg-ring-bg: #d8def0;
+            --bg-inner: #eef2fc;
+            --bg-server-container: rgba(255, 255, 255, 0.65);
+            --bg-server-container-hover: rgba(255, 255, 255, 0.8);
+
+            --accent-primary: #4a7aff;
+            --accent-primary-glow: rgba(74, 122, 255, 0.25);
+            --accent-secondary: #3a5fd5;
+            --accent-purple: #7c4dff;
+            --accent-purple-glow: rgba(124, 77, 255, 0.25);
+
+            --nav-icon-color: #0a0e1a;
+            --nav-icon-active: #4a7aff;
+
+            --nav-bg: rgba(255, 255, 255, 0.7);
+            --nav-indicator-bg: rgba(74, 122, 255, 0.12);
+            --nav-label-color: var(--text-secondary);
+            --nav-label-active: var(--text-primary);
+        }
+        [data-theme="dark"] {
+            --nav-icon-color: rgba(255, 255, 255, 0.6);
+            --nav-icon-active: #4a7aff;
+            --nav-bg: rgba(10, 10, 20, 0.8);
+            --nav-indicator-bg: rgba(74, 122, 255, 0.2);
+            --nav-label-color: rgba(255, 255, 255, 0.5);
+            --nav-label-active: #ffffff;
+        }
+
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: var(--bg-app-end);
+            color: var(--text-primary);
+            overflow: hidden;
+            touch-action: manipulation;
+            transition: background 0.3s ease, color 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ============================================================
+           APP SHELL
+           ============================================================ */
+        .app {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            background: radial-gradient(ellipse at 20% 10%, var(--bg-app-radial-1) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, var(--bg-app-radial-2) 0%, transparent 50%),
+                linear-gradient(165deg, var(--bg-app-start) 0%, var(--bg-app-mid) 50%, var(--bg-app-end) 100%);
+            background-attachment: fixed;
+            transition: background 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: 0;
+        }
+
+        /* ============================================================
+           PAGES — контейнер прокрутки (с отступом под нижнюю панель)
+           ============================================================ */
+        .pages-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+            padding-bottom: 80px; /* отступ под нижнюю панель */
+        }
+
+        .page {
+            position: absolute;
+            inset: 0;
+            padding: 16px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.45s cubic-bezier(0.22, 0.68, 0, 1),
+                opacity 0.45s cubic-bezier(0.22, 0.68, 0, 1);
+            will-change: transform, opacity;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) transparent;
+            background: transparent;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+            padding-bottom: 20px;
+        }
+        .page::-webkit-scrollbar {
+            width: 3px;
+        }
+        .page::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .page::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 12px;
+        }
+
+        .page-main {
+            z-index: 2;
+            transform: translateX(0) translateZ(0);
+            opacity: 1;
+        }
+        .page-main.slide-out {
+            transform: translateX(-28px) scale(0.97) translateZ(0);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .page-servers {
+            z-index: 3;
+            transform: translateX(100%) translateZ(0);
+            opacity: 0;
+            pointer-events: none;
+            padding: 12px 16px 20px;
+            background: radial-gradient(ellipse at 20% 10%, var(--bg-app-radial-1) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, var(--bg-app-radial-2) 0%, transparent 50%),
+                linear-gradient(165deg, var(--bg-app-start) 0%, var(--bg-app-mid) 50%, var(--bg-app-end) 100%);
+            background-attachment: fixed;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .page-servers.active {
+            transform: translateX(0) translateZ(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .page-settings {
+            z-index: 4;
+            transform: translateX(100%) translateZ(0);
+            opacity: 0;
+            pointer-events: none;
+            padding: 12px 16px 20px;
+            background: radial-gradient(ellipse at 20% 10%, var(--bg-app-radial-1) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, var(--bg-app-radial-2) 0%, transparent 50%),
+                linear-gradient(165deg, var(--bg-app-start) 0%, var(--bg-app-mid) 50%, var(--bg-app-end) 100%);
+            background-attachment: fixed;
+        }
+        .page-settings.active {
+            transform: translateX(0) translateZ(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .page-theme {
+            z-index: 5;
+            transform: translateX(100%) translateZ(0);
+            opacity: 0;
+            pointer-events: none;
+            padding: 12px 16px 20px;
+            background: radial-gradient(ellipse at 20% 10%, var(--bg-app-radial-1) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, var(--bg-app-radial-2) 0%, transparent 50%),
+                linear-gradient(165deg, var(--bg-app-start) 0%, var(--bg-app-mid) 50%, var(--bg-app-end) 100%);
+            background-attachment: fixed;
+        }
+        .page-theme.active {
+            transform: translateX(0) translateZ(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .page-style {
+            z-index: 6;
+            transform: translateX(100%) translateZ(0);
+            opacity: 0;
+            pointer-events: none;
+            padding: 12px 16px 20px;
+            background: radial-gradient(ellipse at 20% 10%, var(--bg-app-radial-1) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, var(--bg-app-radial-2) 0%, transparent 50%),
+                linear-gradient(165deg, var(--bg-app-start) 0%, var(--bg-app-mid) 50%, var(--bg-app-end) 100%);
+            background-attachment: fixed;
+        }
+        .page-style.active {
+            transform: translateX(0) translateZ(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .server-content,
+        .settings-content,
+        .theme-content,
+        .style-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 0;
+        }
+
+        /* ============================================================
+           ОСТАЛЬНЫЕ СТИЛИ (без изменений)
+           ============================================================ */
+        .settings-top,
+        .servers-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0 14px;
+            flex-shrink: 0;
+        }
+        .settings-top .back-btn,
+        .servers-top .back-btn,
+        .servers-top .refresh-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-btn);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            color: var(--text-primary);
+            flex-shrink: 0;
+            backdrop-filter: var(--backdrop-blur-light);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .settings-top .back-btn:hover,
+        .servers-top .back-btn:hover,
+        .servers-top .refresh-btn:hover {
+            background: var(--bg-btn-hover);
+        }
+        .settings-top .back-btn:active,
+        .servers-top .back-btn:active,
+        .servers-top .refresh-btn:active {
+            transform: scale(0.92);
+        }
+        .settings-top .back-btn svg,
+        .servers-top .back-btn svg,
+        .servers-top .refresh-btn svg {
+            width: 26px;
+            height: 26px;
+            display: block;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .settings-top .page-title,
+        .servers-top .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
+        }
+        .settings-top .spacer {
+            width: 48px;
+            flex-shrink: 0;
+        }
+        .servers-top .refresh-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .settings-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 6px 0 12px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) transparent;
+        }
+        .settings-body::-webkit-scrollbar {
+            width: 3px;
+        }
+        .settings-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .settings-body::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 12px;
+        }
+
+        .settings-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .settings-group .group-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            padding: 0 2px;
+        }
+
+        .setting-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 14px 16px;
+            backdrop-filter: var(--backdrop-blur-light);
+            box-shadow: var(--shadow-card);
+            transition: background 0.3s, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 0;
+        }
+        .setting-row .label {
+            font-weight: 500;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+        .setting-row .value {
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .setting-row .value .pill-value,
+        .setting-row .value .action-btn {
+            background: var(--bg-btn);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+            color: var(--text-primary);
+        }
+        .setting-row .value .pill-value:hover,
+        .setting-row .value .action-btn:hover {
+            background: var(--bg-btn-hover);
+        }
+
+        .toggle-switch {
+            width: 52px;
+            height: 30px;
+            border-radius: 999px;
+            background: var(--bg-ring-bg);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.3s;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .toggle-switch .thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .toggle-switch.active {
+            background: var(--accent-purple);
+        }
+        .toggle-switch.active .thumb {
+            transform: translateX(22px);
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            color: #ff6a6a;
+            background: var(--bg-btn);
+            border: 2px solid rgba(255, 106, 106, 0.25);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .reset-btn:hover {
+            background: var(--bg-btn-hover);
+        }
+
+        .server-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 2px 0 12px;
+            flex: 0 0 auto;
+        }
+        @media (max-width: 460px) {
+            .server-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .server-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: var(--bg-server-card);
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: var(--backdrop-blur);
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s, opacity 0.4s ease, transform 0.4s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateY(14px) translateZ(0);
+            will-change: transform, opacity;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .server-card.visible {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+        }
+        .server-card:hover {
+            background: var(--bg-server-card-hover);
+            border-color: var(--border-subtle2);
+        }
+        .server-card:active {
+            transform: scale(0.97) translateZ(0);
+        }
+        .server-card .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--bg-btn);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 20px;
+            line-height: 1;
+        }
+        .server-card .card-icon .fi {
+            font-size: 28px;
+            border-radius: 4px;
+        }
+        .server-card .card-icon .globe-icon {
+            width: 30px;
+            height: 30px;
+            stroke: var(--text-primary);
+            stroke-width: 2.2;
+            fill: none;
+        }
+        .server-card .card-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .server-card .card-info .name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
+            line-height: 1.2;
+        }
+        .server-card .card-info .sub {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .server-card .card-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .server-card .card-right .check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-btn);
+            border: 2px solid var(--border-subtle2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+        }
+        .server-card .card-right .check svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: var(--status-connected);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .server-card.active .card-right .check {
+            background: rgba(0, 230, 118, 0.18);
+            border-color: var(--status-connected);
+        }
+        .server-card.active .card-right .check svg {
+            opacity: 1;
+        }
+        .server-card.premium {
+            cursor: default;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+        .server-card.premium:hover {
+            background: var(--bg-server-card);
+            border-color: var(--border-subtle);
+            transform: none;
+        }
+        .server-card.premium:active {
+            transform: none;
+        }
+        .premium-block {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .premium-block .premium-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--premium-gold);
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            padding: 2px 10px;
+            border-radius: 20px;
+            border: 2px solid var(--premium-gold-border);
+            background: var(--premium-gold-dim);
+            transition: border-color 0.2s, background 0.2s;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.10);
+        }
+        .server-card.active .premium-block .premium-label {
+            border-color: var(--premium-gold);
+            background: rgba(255, 215, 0, 0.12);
+        }
+        .premium-block .lock-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--premium-gold-dim);
+            border: 2px solid var(--premium-gold-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            line-height: 1;
+            color: var(--premium-gold);
+            transition: background 0.2s, border-color 0.2s;
+            flex-shrink: 0;
+        }
+        .server-card.active .premium-block .lock-circle {
+            background: rgba(255, 215, 0, 0.12);
+            border-color: var(--premium-gold);
+        }
+        .server-card.offline {
+            border-color: rgba(255, 80, 80, 0.5);
+            background: rgba(255, 0, 0, 0.06);
+            opacity: 0.6;
+        }
+        .server-card.offline .card-info .sub {
+            color: var(--status-disconnected);
+            font-weight: 600;
+        }
+        .server-card.offline .card-right .check {
+            opacity: 0.3;
+        }
+
+        .my-servers-section {
+            margin-top: 4px;
+            padding-top: 2px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .my-servers-header {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+            padding: 8px 4px 6px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        .apply-btn-wrap {
+            padding: 8px 0 2px;
+            flex-shrink: 0;
+        }
+        .apply-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+            background: var(--bg-btn);
+            border: 1px solid var(--border-subtle);
+            box-shadow: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            letter-spacing: 0.3px;
+            backdrop-filter: var(--backdrop-blur-light);
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+        }
+        .apply-btn:hover {
+            background: var(--bg-btn-hover);
+        }
+        .apply-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* MAIN PAGE */
+        .page-main .main-scroll {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding-bottom: 4px;
+            padding-top: 4px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) transparent;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        .page-main .main-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+        .page-main .main-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .page-main .main-scroll::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 12px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            padding: 0 0 12px;
+        }
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            flex: 1;
+        }
+        .logo .brand {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: var(--gradient-logo);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+        .top-actions {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-btn);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-btn);
+            cursor: pointer;
+            transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+            color: var(--text-primary);
+            backdrop-filter: var(--backdrop-blur-light);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .icon-btn:hover {
+            background: var(--bg-btn-hover);
+        }
+        .icon-btn:active {
+            transform: scale(0.92);
+        }
+        .icon-btn svg {
+            width: 26px;
+            height: 26px;
+            display: block;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .icon-btn .globe-icon-header {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* POWER BUTTON */
+        .center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0 6px;
+            flex-shrink: 0;
+            margin-top: 30px;
+        }
+        .power-wrap {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform;
+            transform: translateZ(0);
+            transition: transform 0.08s cubic-bezier(0.22, 0.68, 0, 1);
+        }
+        .power-wrap:active {
+            transform: scale(0.94) translateZ(0);
+        }
+        .power-wrap .outer-ring {
+            position: absolute;
+            width: 105%;
+            height: 105%;
+            top: -2.5%;
+            left: -2.5%;
+            border-radius: 50%;
+            background: var(--bg-ring);
+            z-index: 0;
+            will-change: transform;
+            transform: translateZ(0);
+            transition: background 0.4s ease;
+        }
+        .power-wrap .ring-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            background: var(--bg-ring-bg);
+            z-index: 1;
+            transition: background 0.5s ease;
+            will-change: background;
+            transform: translateZ(0);
+        }
+        .power-wrap .ring-loader {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            will-change: opacity, transform;
+            transform: translateZ(0);
+        }
+        .power-wrap .ring-loader svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        .power-wrap .ring-loader circle {
+            fill: none;
+            stroke: var(--accent-primary);
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 600 200;
+            stroke-dashoffset: 0;
+            transform-origin: center;
+            animation: spin-ring 1.2s linear infinite;
+            will-change: stroke-dashoffset;
+            transform: translateZ(0);
+            opacity: 0.6;
+        }
+        @keyframes spin-ring {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -800; }
+        }
+        .power-wrap.loading .ring-loader {
+            opacity: 1;
+        }
+        .power-wrap .inner-circle {
+            position: relative;
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            background: var(--bg-inner);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--power-inner-shadow);
+            z-index: 3;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            outline: none;
+            padding: 0;
+            transition: box-shadow 0.5s ease;
+            will-change: box-shadow;
+            transform: translateZ(0);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .power-wrap .inner-circle:focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 6px;
+        }
+        .power-wrap .inner-circle .icon {
+            width: 92px;
+            height: 92px;
+            fill: none;
+            stroke: var(--text-muted);
+            stroke-width: 3.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.4s, transform 0.3s;
+            will-change: stroke, transform;
+            transform: translateZ(0);
+        }
+        .power-wrap .inner-circle .icon-shield {
+            width: 108px;
+            height: 108px;
+            fill: none;
+            stroke: var(--accent-primary);
+            stroke-width: 2.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.4s, transform 0.3s;
+            will-change: stroke, transform;
+            transform: translateZ(0);
+            display: none;
+            filter: drop-shadow(0 0 24px var(--accent-primary-glow));
+        }
+        .power-wrap.active .ring-bg {
+            background: var(--accent-primary);
+        }
+        [data-theme="dark"] .power-wrap.active .ring-bg {
+            background: var(--accent-primary);
+        }
+        [data-theme="light"] .power-wrap.active .ring-bg {
+            background: var(--accent-primary);
+        }
+        .power-wrap.active .inner-circle {
+            box-shadow: var(--power-inner-shadow-active);
+        }
+        .power-wrap.active .inner-circle .icon {
+            display: none;
+        }
+        .power-wrap.active .inner-circle .icon-shield {
+            display: block;
+        }
+        .power-wrap.active .ring-loader {
+            opacity: 0 !important;
+        }
+
+        /* INSTRUCTION */
+        .instruction {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 30px;
+            flex-shrink: 0;
+            min-height: 56px;
+        }
+        .instruction .status-container {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 52px;
+        }
+        .instruction .status-container .label {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+            text-align: center;
+            width: 100%;
+            padding: 0 10px;
+            will-change: opacity;
+            transform: translateZ(0);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .instruction .status-container .timer {
+            font-size: 60px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 3px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-primary);
+            text-shadow: 0 0 28px rgba(255, 255, 255, 0.10);
+            padding: 0 10px;
+            will-change: opacity, transform;
+            width: 100%;
+            text-align: center;
+        }
+        .instruction .status-container.show-timer .label {
+            opacity: 0;
+        }
+        .instruction .status-container.show-timer .timer {
+            opacity: 1;
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 24px;
+            border-radius: 999px;
+            background: var(--bg-btn);
+            border: 2px solid transparent;
+            background-image: linear-gradient(to right, var(--text-muted), var(--text-secondary)) border-box,
+                var(--bg-btn) padding-box;
+            background-clip: border-box, padding-box;
+            background-origin: border-box, padding-box;
+            font-weight: 600;
+            font-size: 17px;
+            color: var(--text-pill);
+            box-shadow: var(--shadow-pill);
+            backdrop-filter: var(--backdrop-blur-light);
+            margin-top: 4px;
+            position: relative;
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+            will-change: border-color, background, color;
+            transform: translateZ(0);
+            flex-shrink: 0;
+        }
+        .status-pill::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 999px;
+            padding: 2px;
+            background: linear-gradient(to right, var(--text-muted), var(--text-secondary));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        .status-pill.connected::before {
+            opacity: 0.4;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--status-disconnected);
+            box-shadow: 0 0 16px rgba(255, 106, 106, 0.2);
+            transition: background 0.3s, box-shadow 0.3s;
+            will-change: background, box-shadow;
+            transform: translateZ(0);
+        }
+        .status-pill.connected .status-dot {
+            background: var(--status-connected);
+            box-shadow: 0 0 24px rgba(0, 230, 118, 0.3);
+        }
+        .status-pill.connected {
+            color: var(--text-primary);
+        }
+
+        /* SERVER STATS */
+        .server-stats-new {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 0px 0 0;
+            flex-shrink: 0;
+        }
+        .server-stats-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.3px;
+            padding: 2px 4px 0;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        .server-container {
+            background: var(--bg-server-container);
+            border-radius: 18px;
+            padding: 16px 20px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s, background 0.3s;
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform, box-shadow;
+            transform: translateZ(0);
+        }
+        [data-theme="dark"] .server-container {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        [data-theme="dark"] .server-container:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .server-container:hover {
+            transform: scale(1.01) translateZ(0);
+            box-shadow: 0 6px 36px rgba(0, 0, 0, 0.45);
+            background: var(--bg-server-container-hover);
+        }
+        .server-container:active {
+            transform: scale(0.98) translateZ(0);
+        }
+        .server-container .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .server-container .country-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1;
+        }
+        .server-container .flag-box {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-btn);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: 0;
+        }
+        .server-container .flag-box .fi {
+            font-size: 28px;
+            border-radius: 4px;
+        }
+        .server-container .flag-box .globe-icon {
+            width: 28px;
+            height: 28px;
+            stroke: var(--text-primary);
+            stroke-width: 2.2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .server-container .country-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            word-wrap: break-word;
+            max-width: 100%;
+            flex: 1;
+        }
+        .server-container .ping {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-btn);
+            padding: 2px 14px;
+            border-radius: 30px;
+            transition: color 0.3s, background 0.3s;
+        }
+        .server-container .ping small {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-left: 2px;
+        }
+        .ping-low {
+            color: var(--status-connected) !important;
+        }
+        .ping-mid {
+            color: var(--status-warning) !important;
+        }
+        .ping-high {
+            color: var(--status-disconnected) !important;
+        }
+
+        .config-placeholder {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 32px 24px 28px;
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: var(--backdrop-blur);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        .config-message {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            letter-spacing: -0.2px;
+        }
+        .config-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            flex-shrink: 0;
+            margin-top: 0;
+        }
+        .big-btn {
+            flex: 1 1 0;
+            min-width: 140px;
+            padding: 14px 22px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--text-primary);
+            display: inline-flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            background: var(--bg-btn);
+            box-shadow: var(--shadow-btn);
+            transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+            backdrop-filter: var(--backdrop-blur-light);
+            border: 1px solid var(--border-subtle);
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform, box-shadow, background;
+            transform: translateZ(0);
+            font-family: inherit;
+        }
+        .big-btn:hover {
+            transform: translateY(-2px) translateZ(0);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            background: var(--bg-btn-hover);
+        }
+        .big-btn:active {
+            transform: scale(0.97) translateZ(0);
+        }
+        .big-btn svg {
+            width: 26px;
+            height: 26px;
+            flex-shrink: 0;
+            fill: none;
+            stroke: var(--text-secondary);
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .big-btn.gray svg {
+            stroke: var(--text-secondary);
+        }
+        #fromBufferBtn {
+            background: var(--gradient-add-btn);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 24px var(--accent-primary-glow);
+            transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+        }
+        [data-theme="light"] #fromBufferBtn {
+            background: var(--gradient-add-btn);
+            color: #fff;
+            box-shadow: 0 4px 24px rgba(74, 122, 255, 0.3);
+        }
+        #fromBufferBtn:hover {
+            box-shadow: 0 8px 36px var(--accent-primary-glow);
+            transform: translateY(-2px) scale(1.01);
+        }
+        #fromBufferBtn:active {
+            transform: scale(0.97);
+        }
+        #fromBufferBtn svg {
+            stroke: #fff;
+        }
+        #fromBufferBtn span {
+            color: #fff;
+        }
+        #fromBufferBtn.hidden {
+            display: none;
+        }
+
+        /* MODAL */
+        .modal-overlay {
             position: fixed;
             inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: visible;
-            mix-blend-mode: screen;
+            z-index: 100;
+            background: var(--bg-modal);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            animation: modalFade 0.3s ease;
+            padding: 20px;
         }
-
-        .spot {
-            position: absolute;
+        .modal-overlay.active {
+            display: flex;
+        }
+        @keyframes modalFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal-sheet {
+            background: var(--bg-app-mid);
+            border-radius: 28px 28px 0 0;
+            max-width: 480px;
+            width: 100%;
+            max-height: 80vh;
+            padding: 24px 20px 32px;
+            box-shadow: var(--shadow-modal);
+            border: 1px solid var(--border-subtle);
+            transform: translateY(30px);
+            animation: modalSlide 0.35s cubic-bezier(0.22, 0.68, 0, 1) forwards;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) transparent;
+        }
+        .modal-sheet::-webkit-scrollbar {
+            width: 3px;
+        }
+        .modal-sheet::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .modal-sheet::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 12px;
+        }
+        @keyframes modalSlide {
+            to { transform: translateY(0); }
+        }
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            border-radius: 4px;
+            background: var(--text-muted);
+            margin: 0 auto 18px;
+            opacity: 0.4;
+        }
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.3px;
+        }
+        .modal-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 4px;
+            border-bottom: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: background 0.15s;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .modal-option:hover {
+            background: var(--bg-card-hover);
+        }
+        .modal-option .label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .modal-option .check {
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            pointer-events: none;
-            filter: blur(48px) saturate(120%);
-            will-change: transform, width, height, border-radius, background, opacity, filter;
-            mix-blend-mode: screen;
-            opacity: 0.95;
+            border: 2px solid var(--border-subtle2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .modal-option .check svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .modal-option.selected .check {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+        .modal-option.selected .check svg {
+            opacity: 1;
+        }
+        .modal-close-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--text-primary);
+            background: var(--bg-btn);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            margin-top: 12px;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .modal-close-btn:hover {
+            background: var(--bg-btn-hover);
+        }
+        .modal-close-btn:active {
+            transform: scale(0.97);
         }
 
-        /* индивидуальные пятна с разными размерами и позициями */
-        .s1 { width: 44vmin; height: 44vmin; left: 50%; top: 28%; transform: translate(-50%, -28%); }
-        .s2 { width: 36vmin; height: 36vmin; left: 40%; top: 36%; transform: translate(-50%, -50%); filter: blur(72px) saturate(130%); }
-        .s3 { width: 34vmin; height: 34vmin; left: 62%; top: 34%; transform: translate(-50%, -50%); filter: blur(80px) saturate(120%); }
-        .s4 { width: 58vmin; height: 58vmin; left: 52%; top: 42%; transform: translate(-50%, -50%); filter: blur(110px) saturate(120%); opacity:0.85 }
-        .s5 { width: 28vmin; height: 28vmin; left: 30%; top: 25%; transform: translate(-50%, -50%); filter: blur(60px) saturate(130%); opacity:0.9 }
-        .s6 { width: 30vmin; height: 30vmin; left: 70%; top: 48%; transform: translate(-50%, -50%); filter: blur(64px) saturate(120%); opacity:0.9 }
-
-        /* Каждый слой — радиальные градиенты, цвета назначаются в JS через CSS-переменные */
-        .s1 { background: radial-gradient(circle at 45% 40%, var(--c1-inner, rgba(255,200,120,1)) 0%, var(--c1, rgba(255,140,60,1)) 35%, rgba(0,0,0,0) 75%); }
-        .s2 { background: radial-gradient(circle at 60% 20%, var(--c2-inner, rgba(255,90,140,0.95)) 0%, var(--c2, rgba(200,60,140,0.9)) 35%, rgba(0,0,0,0) 80%); }
-        .s3 { background: radial-gradient(circle at 30% 70%, var(--c3-inner, rgba(120,220,120,0.95)) 0%, var(--c3, rgba(40,200,120,0.9)) 35%, rgba(0,0,0,0) 80%); }
-        .s4 { background: radial-gradient(circle at 50% 50%, var(--c4-inner, rgba(255,230,120,0.95)) 0%, var(--c4, rgba(255,170,40,0.95)) 30%, rgba(0,0,0,0) 70%); }
-        .s5 { background: radial-gradient(circle at 20% 30%, var(--c5-inner, rgba(200,60,200,0.9)) 0%, var(--c5, rgba(180,40,160,0.85)) 35%, rgba(0,0,0,0) 80%); }
-        .s6 { background: radial-gradient(circle at 80% 60%, var(--c6-inner, rgba(255,180,80,0.9)) 0%, var(--c6, rgba(255,100,40,0.9)) 35%, rgba(0,0,0,0) 80%); }
-
-        /* Морфинг форм через border-radius + небольшие перемещения */
-        @keyframes morph1 {
-            0% { transform: translate(-50%, -28%) scale(1); border-radius: 48% 52% 45% 55% / 52% 45% 55% 48%; }
-            25% { transform: translate(-42%, -34%) scale(1.03); border-radius: 42% 58% 40% 60% / 50% 42% 58% 50%; }
-            50% { transform: translate(-58%, -24%) scale(0.97); border-radius: 55% 45% 60% 40% / 44% 60% 40% 56%; }
-            75% { transform: translate(-50%, -30%) scale(1.02); border-radius: 50% 50% 45% 55% / 48% 50% 55% 47%; }
-            100% { transform: translate(-50%, -28%) scale(1); border-radius: 48% 52% 45% 55% / 52% 45% 55% 48%; }
+        /* THEME & STYLE options */
+        .theme-options,
+        .style-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 20px;
         }
-        @keyframes morph2 {
-            0% { transform: translate(-50%, -50%) scale(1); border-radius: 45% 55% 50% 50% / 50% 48% 52% 50%; }
-            25% { transform: translate(-60%, -44%) scale(1.05); border-radius: 60% 40% 45% 55% / 40% 60% 50% 50%; }
-            50% { transform: translate(-42%, -56%) scale(0.96); border-radius: 50% 50% 55% 45% / 55% 50% 45% 50%; }
-            75% { transform: translate(-48%, -52%) scale(1.02); border-radius: 46% 54% 50% 50% / 48% 52% 50% 50%; }
-            100% { transform: translate(-50%, -50%) scale(1); border-radius: 45% 55% 50% 50% / 50% 48% 52% 50%; }
+        .theme-option,
+        .style-option {
+            padding: 16px 20px;
+            border-radius: 14px;
+            background: var(--bg-btn);
+            border: 2px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+            text-align: left;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
         }
-        @keyframes morph3 {
-            0% { transform: translate(-50%, -50%) scale(1); border-radius: 50% 50% 48% 52% / 50% 52% 48% 50%; }
-            25% { transform: translate(-44%, -44%) scale(1.04); border-radius: 42% 58% 60% 40% / 60% 40% 50% 50%; }
-            50% { transform: translate(-58%, -54%) scale(0.98); border-radius: 55% 45% 50% 50% / 50% 45% 55% 50%; }
-            75% { transform: translate(-50%, -48%) scale(1.01); border-radius: 52% 48% 55% 45% / 48% 50% 52% 50%; }
-            100% { transform: translate(-50%, -50%) scale(1); border-radius: 50% 50% 48% 52% / 50% 52% 48% 50%; }
+        .theme-option:hover,
+        .style-option:hover {
+            background: var(--bg-btn-hover);
         }
-        @keyframes morph4 {
-            0% { transform: translate(-50%, -50%) scale(1); border-radius: 40% 60% 50% 50% / 50% 40% 60% 50%; }
-            25% { transform: translate(-52%, -46%) scale(1.02); border-radius: 60% 40% 55% 45% / 40% 60% 50% 50%; }
-            50% { transform: translate(-48%, -54%) scale(0.97); border-radius: 55% 45% 48% 52% / 50% 45% 55% 50%; }
-            75% { transform: translate(-50%, -50%) scale(1.01); border-radius: 46% 54% 50% 50% / 48% 52% 50% 50%; }
-            100% { transform: translate(-50%, -50%) scale(1); border-radius: 40% 60% 50% 50% / 50% 40% 60% 50%; }
+        .theme-option:active,
+        .style-option:active {
+            transform: scale(0.97);
         }
-        @keyframes morph5 {
-            0% { transform: translate(-50%, -50%) scale(1); border-radius: 52% 48% 45% 55% / 58% 42% 48% 52%; }
-            25% { transform: translate(-44%, -60%) scale(1.03); border-radius: 48% 52% 55% 45% / 50% 58% 42% 50%; }
-            50% { transform: translate(-56%, -40%) scale(0.97); border-radius: 42% 58% 60% 40% / 44% 60% 40% 56%; }
-            75% { transform: translate(-50%, -50%) scale(1.02); border-radius: 50% 50% 45% 55% / 48% 50% 55% 47%; }
-            100% { transform: translate(-50%, -50%) scale(1); border-radius: 52% 48% 45% 55% / 58% 42% 48% 52%; }
-        }
-        @keyframes morph6 {
-            0% { transform: translate(-50%, -50%) scale(1); border-radius: 45% 55% 50% 50% / 50% 48% 52% 50%; }
-            25% { transform: translate(-60%, -52%) scale(1.04); border-radius: 60% 40% 45% 55% / 40% 60% 50% 50%; }
-            50% { transform: translate(-42%, -46%) scale(0.98); border-radius: 50% 50% 55% 45% / 55% 50% 45% 50%; }
-            75% { transform: translate(-50%, -48%) scale(1.01); border-radius: 46% 54% 50% 50% / 48% 52% 50% 50%; }
-            100% { transform: translate(-50%, -50%) scale(1); border-radius: 45% 55% 50% 50% / 50% 48% 52% 50%; }
+        .theme-option.selected,
+        .style-option.selected {
+            border-color: var(--accent-primary);
+            background: var(--bg-card-active);
         }
 
-        .s1 { animation: morph1 10s ease-in-out infinite; }
-        .s2 { animation: morph2 12s ease-in-out infinite; animation-delay: 1.2s; }
-        .s3 { animation: morph3 14s ease-in-out infinite; animation-delay: 0.6s; }
-        .s4 { animation: morph4 18s ease-in-out infinite; animation-delay: 0.9s; }
-        .s5 { animation: morph5 11s ease-in-out infinite; animation-delay: 0.4s; }
-        .s6 { animation: morph6 13s ease-in-out infinite; animation-delay: 1.0s; }
-
-        /* небольшой центральный свет */
-        #background-spots::after {
-            content: "";
+        /* ============================================================
+           НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ
+           ============================================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: var(--nav-bg);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border-top: 1px solid var(--border-subtle);
+            padding: 6px 16px 12px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            box-shadow: var(--shadow-nav);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .bottom-nav .nav-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            max-width: 480px;
+            margin: 0 auto;
+            touch-action: none;
+        }
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 6px 12px;
+            border-radius: 60px;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            min-width: 56px;
+            touch-action: none;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bottom-nav .nav-item .icon {
+            font-size: 28px;
+            color: var(--nav-icon-color);
+            line-height: 1;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
+        }
+        .bottom-nav .nav-item.active .icon {
+            color: var(--nav-icon-active);
+            transform: scale(1.1);
+        }
+        .bottom-nav .nav-item .label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--nav-label-color);
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        .bottom-nav .nav-item.active .label {
+            color: var(--nav-label-active);
+        }
+        .bottom-nav .indicator {
             position: absolute;
-            inset: 0;
+            top: 2px;
+            bottom: 2px;
+            left: 0;
+            background: var(--nav-indicator-bg);
+            border-radius: 60px;
+            z-index: 1;
             pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(30% 25% at 50% 32%, rgba(255,210,130,0.06), transparent 25%);
+            will-change: transform, width;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .bottom-nav .indicator.no-transition {
+            transition: none !important;
         }
 
-        /* ===== КОНТЕНТ ===== */
-        .page-header { padding: 0 20px 6px; position: relative; z-index: 2; }
-        .page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+        @media (max-width: 500px) {
+            .bottom-nav {
+                padding: 4px 10px 10px;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            }
+            .bottom-nav .nav-item {
+                padding: 4px 8px;
+                min-width: 48px;
+            }
+            .bottom-nav .nav-item .icon {
+                font-size: 24px;
+            }
+            .bottom-nav .nav-item .label {
+                font-size: 10px;
+            }
+        }
 
-        .genre-list { display: flex; gap: 14px; overflow-x: auto; padding: 16px 20px 12px; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; position: relative; z-index: 2; -ms-overflow-style: none; }
-        .genre-list::-webkit-scrollbar { display: none; }
+        @media (max-width: 380px) {
+            .bottom-nav .nav-item .icon {
+                font-size: 20px;
+            }
+            .bottom-nav .nav-item .label {
+                font-size: 9px;
+            }
+        }
 
-        .genre-item { background: transparent; color: #fff; opacity: 0.5; border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; border-radius: 50px; font-size: 14px; font-weight: 700; white-space: nowrap; transition: all 0.3s ease; cursor: pointer; flex-shrink: 0; background: rgba(255,255,255,0.05); backdrop-filter: blur(4px); user-select: none; }
-        .genre-item.active { opacity: 1; border-color: var(--spot-color, #FF3B30); background: rgba(255,255,255,0.1); transform: scale(1.05); box-shadow: 0 0 20px var(--spot-color, #FF3B30); }
+        /* ============================================================
+           АДАПТИВ (остальное)
+           ============================================================ */
+        @media (max-width: 600px) {
+            .page {
+                padding: 12px 14px 14px;
+            }
+            .logo .brand {
+                font-size: 30px;
+            }
+            .icon-btn {
+                width: 44px;
+                height: 44px;
+            }
+            .icon-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+            .power-wrap {
+                width: 180px;
+                height: 180px;
+            }
+            .power-wrap .inner-circle .icon {
+                width: 84px;
+                height: 84px;
+            }
+            .power-wrap .inner-circle .icon-shield {
+                width: 98px;
+                height: 98px;
+            }
+            .instruction .status-container .timer {
+                font-size: 50px;
+            }
+            .instruction .status-container .label {
+                font-size: 20px;
+            }
+            .instruction {
+                margin-top: 28px;
+            }
+            .server-container .country-name {
+                font-size: 20px;
+            }
+            .big-btn {
+                min-width: 120px;
+                padding: 12px 18px;
+                font-size: 15px;
+                gap: 10px;
+            }
+            .big-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+            .config-message {
+                font-size: 18px;
+            }
+            .servers-top .page-title,
+            .settings-top .page-title {
+                font-size: 22px;
+            }
+            .servers-top .back-btn,
+            .servers-top .refresh-btn,
+            .settings-top .back-btn {
+                width: 44px;
+                height: 44px;
+            }
+            .servers-top .back-btn svg,
+            .servers-top .refresh-btn svg,
+            .settings-top .back-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+            .settings-top .spacer {
+                width: 44px;
+            }
+            .server-card {
+                padding: 10px 12px;
+            }
+            .server-card .card-info .name {
+                font-size: 15px;
+            }
+            .server-card .card-info .sub {
+                font-size: 11px;
+            }
+            .server-card .card-icon .fi {
+                font-size: 26px;
+            }
+            .server-card .card-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 18px;
+            }
+            .server-card .card-icon .globe-icon {
+                width: 28px;
+                height: 28px;
+            }
+            .apply-btn {
+                font-size: 17px;
+                padding: 14px;
+            }
+            .my-servers-header {
+                font-size: 13px;
+            }
+            .header {
+                padding-bottom: 8px;
+            }
+            .center {
+                padding: 6px 0 4px;
+                margin-top: 30px;
+            }
+            .server-container {
+                padding: 12px 16px;
+            }
+            .page-main .main-scroll {
+                gap: 12px;
+                padding-top: 4px;
+            }
+            .status-pill {
+                font-size: 15px;
+                padding: 6px 18px;
+            }
+            .status-dot {
+                width: 10px;
+                height: 10px;
+            }
+            .server-stats-header {
+                font-size: 14px;
+            }
+            .power-wrap .ring-loader circle {
+                stroke-width: 14;
+                stroke-dasharray: 600 200;
+            }
+            .config-placeholder {
+                padding: 28px 20px 24px;
+                gap: 18px;
+            }
+            .config-actions {
+                gap: 12px;
+            }
+            .setting-card {
+                padding: 14px 16px;
+            }
+            .modal-sheet {
+                padding: 20px 16px 28px;
+            }
+            .modal-title {
+                font-size: 20px;
+            }
+            .theme-option,
+            .style-option {
+                font-size: 17px;
+                padding: 14px 18px;
+            }
+            .pages-container {
+                padding-bottom: 72px;
+            }
+        }
 
-        .music-container { display: flex; gap: 24px; overflow-x: auto; padding: 10px 15px 30px 15px; scroll-behavior: smooth; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; cursor: grab; user-select: none; position: relative; z-index: 2; scroll-padding: 0; -ms-overflow-style: none; }
-        .music-container::-webkit-scrollbar { display: none; }
+        @media (max-width: 480px) {
+            .page {
+                padding: 10px 12px 12px;
+            }
+            .logo .brand {
+                font-size: 28px;
+            }
+            .icon-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .icon-btn svg {
+                width: 22px;
+                height: 22px;
+            }
+            .power-wrap {
+                width: 160px;
+                height: 160px;
+            }
+            .power-wrap .inner-circle .icon {
+                width: 72px;
+                height: 72px;
+                stroke-width: 3.4;
+            }
+            .power-wrap .inner-circle .icon-shield {
+                width: 86px;
+                height: 86px;
+                stroke-width: 2.6;
+            }
+            .instruction .status-container {
+                height: 48px;
+            }
+            .instruction .status-container .timer {
+                font-size: 44px;
+                letter-spacing: 2px;
+            }
+            .instruction .status-container .label {
+                font-size: 18px;
+            }
+            .instruction {
+                margin-top: 26px;
+            }
+            .server-stats-new {
+                gap: 10px;
+            }
+            .server-container {
+                padding: 10px 14px;
+            }
+            .server-container .country-name {
+                font-size: 18px;
+            }
+            .server-container .flag-box .fi {
+                font-size: 24px;
+            }
+            .server-container .flag-box {
+                width: 34px;
+                height: 34px;
+            }
+            .server-container .flag-box .globe-icon {
+                width: 24px;
+                height: 24px;
+            }
+            .server-container .ping {
+                font-size: 15px;
+                padding: 1px 12px;
+            }
+            .big-btn {
+                min-width: 100px;
+                padding: 10px 16px;
+                font-size: 14px;
+                gap: 8px;
+            }
+            .big-btn svg {
+                width: 22px;
+                height: 22px;
+            }
+            .config-message {
+                font-size: 17px;
+            }
+            .servers-top .page-title,
+            .settings-top .page-title {
+                font-size: 20px;
+            }
+            .servers-top .back-btn,
+            .servers-top .refresh-btn,
+            .settings-top .back-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .servers-top .back-btn svg,
+            .servers-top .refresh-btn svg,
+            .settings-top .back-btn svg {
+                width: 22px;
+                height: 22px;
+            }
+            .settings-top .spacer {
+                width: 40px;
+            }
+            .server-card .card-info .name {
+                font-size: 14px;
+            }
+            .server-card .card-info .sub {
+                font-size: 11px;
+            }
+            .server-card .card-icon .fi {
+                font-size: 24px;
+            }
+            .server-card .card-icon .globe-icon {
+                width: 24px;
+                height: 24px;
+            }
+            .server-card {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+            .server-card .card-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
+            }
+            .apply-btn {
+                font-size: 16px;
+                padding: 12px;
+            }
+            .my-servers-header {
+                font-size: 12px;
+                padding: 6px 4px 4px;
+            }
+            .server-cards {
+                gap: 8px;
+                padding: 0 0 8px;
+            }
+            .premium-block .premium-label {
+                font-size: 10px;
+                padding: 1px 8px;
+            }
+            .premium-block .lock-circle {
+                width: 20px;
+                height: 20px;
+                font-size: 11px;
+            }
+            .servers-top,
+            .settings-top {
+                padding: 4px 0 10px;
+            }
+            .status-pill {
+                font-size: 14px;
+                padding: 5px 16px;
+                gap: 8px;
+            }
+            .status-dot {
+                width: 10px;
+                height: 10px;
+            }
+            .page-main .main-scroll {
+                gap: 10px;
+                padding-top: 4px;
+            }
+            .power-wrap .ring-loader circle {
+                stroke-width: 14;
+                stroke-dasharray: 600 200;
+            }
+            .header {
+                padding-bottom: 8px;
+            }
+            .center {
+                padding: 4px 0 2px;
+                margin-top: 30px;
+            }
+            .server-stats-header {
+                font-size: 13px;
+            }
+            .config-placeholder {
+                padding: 24px 16px 20px;
+                gap: 16px;
+            }
+            .config-actions {
+                gap: 10px;
+            }
+            .setting-card {
+                padding: 12px 14px;
+            }
+            .modal-sheet {
+                padding: 18px 14px 24px;
+            }
+            .modal-title {
+                font-size: 18px;
+            }
+            .modal-option .label {
+                font-size: 15px;
+            }
+            .theme-option,
+            .style-option {
+                font-size: 16px;
+                padding: 12px 16px;
+            }
+            .pages-container {
+                padding-bottom: 64px;
+            }
+        }
 
-        .tracks-column-genre { display: flex; flex-direction: column; gap: 12px; width: 340px; min-width: 340px; flex-shrink: 0; scroll-snap-align: start; }
+        @media (max-width: 380px) {
+            .page {
+                padding: 8px 10px 10px;
+            }
+            .logo .brand {
+                font-size: 24px;
+            }
+            .icon-btn {
+                width: 36px;
+                height: 36px;
+            }
+            .icon-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+            .power-wrap {
+                width: 140px;
+                height: 140px;
+            }
+            .power-wrap .inner-circle .icon {
+                width: 64px;
+                height: 64px;
+                stroke-width: 3;
+            }
+            .power-wrap .inner-circle .icon-shield {
+                width: 76px;
+                height: 76px;
+                stroke-width: 2.4;
+            }
+            .instruction .status-container .timer {
+                font-size: 38px;
+                letter-spacing: 1.5px;
+            }
+            .instruction .status-container .label {
+                font-size: 16px;
+            }
+            .instruction .status-container {
+                height: 44px;
+            }
+            .instruction {
+                margin-top: 24px;
+            }
+            .server-container .country-name {
+                font-size: 16px;
+            }
+            .server-container .flag-box .fi {
+                font-size: 20px;
+            }
+            .server-container .flag-box {
+                width: 28px;
+                height: 28px;
+            }
+            .server-container .flag-box .globe-icon {
+                width: 20px;
+                height: 20px;
+            }
+            .server-container .ping {
+                font-size: 13px;
+                padding: 0 10px;
+            }
+            .big-btn {
+                min-width: 80px;
+                padding: 8px 14px;
+                font-size: 13px;
+                gap: 6px;
+                border-radius: 12px;
+            }
+            .big-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+            .config-message {
+                font-size: 16px;
+            }
+            .servers-top .page-title,
+            .settings-top .page-title {
+                font-size: 18px;
+            }
+            .servers-top .back-btn,
+            .servers-top .refresh-btn,
+            .settings-top .back-btn {
+                width: 36px;
+                height: 36px;
+            }
+            .servers-top .back-btn svg,
+            .servers-top .refresh-btn svg,
+            .settings-top .back-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+            .settings-top .spacer {
+                width: 36px;
+            }
+            .server-card .card-info .name {
+                font-size: 13px;
+            }
+            .server-card .card-info .sub {
+                font-size: 10px;
+            }
+            .server-card .card-icon .fi {
+                font-size: 22px;
+            }
+            .server-card .card-icon .globe-icon {
+                width: 22px;
+                height: 22px;
+            }
+            .server-card {
+                padding: 6px 8px;
+                gap: 6px;
+                border-radius: 10px;
+            }
+            .server-card .card-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+                border-radius: 8px;
+            }
+            .server-card .card-right .check {
+                width: 20px;
+                height: 20px;
+            }
+            .server-card .card-right .check svg {
+                width: 12px;
+                height: 12px;
+            }
+            .apply-btn {
+                font-size: 15px;
+                padding: 10px;
+                border-radius: 12px;
+            }
+            .my-servers-header {
+                font-size: 11px;
+                padding: 4px 4px 2px;
+            }
+            .server-cards {
+                gap: 6px;
+                padding: 0 0 6px;
+            }
+            .premium-block .premium-label {
+                font-size: 9px;
+                padding: 0 6px;
+                border-width: 1.5px;
+            }
+            .premium-block .lock-circle {
+                width: 18px;
+                height: 18px;
+                font-size: 10px;
+                border-width: 1.5px;
+            }
+            .servers-top,
+            .settings-top {
+                padding: 2px 0 8px;
+            }
+            .status-pill {
+                font-size: 13px;
+                padding: 4px 14px;
+                gap: 6px;
+            }
+            .status-dot {
+                width: 8px;
+                height: 8px;
+            }
+            .top-actions {
+                gap: 8px;
+            }
+            .page-main .main-scroll {
+                gap: 8px;
+                padding-top: 4px;
+            }
+            .power-wrap .ring-loader circle {
+                stroke-width: 14;
+                stroke-dasharray: 600 200;
+            }
+            .header {
+                padding-bottom: 6px;
+            }
+            .center {
+                padding: 2px 0 0;
+                margin-top: 30px;
+            }
+            .server-stats-header {
+                font-size: 12px;
+            }
+            .config-placeholder {
+                padding: 20px 12px 16px;
+                gap: 14px;
+            }
+            .config-actions {
+                gap: 8px;
+            }
+            .setting-card {
+                padding: 10px 12px;
+            }
+            .setting-row .label {
+                font-size: 14px;
+            }
+            .setting-row .value {
+                font-size: 13px;
+            }
+            .toggle-switch {
+                width: 44px;
+                height: 26px;
+            }
+            .toggle-switch .thumb {
+                width: 20px;
+                height: 20px;
+                top: 3px;
+                left: 3px;
+            }
+            .toggle-switch.active .thumb {
+                transform: translateX(18px);
+            }
+            .modal-sheet {
+                padding: 16px 12px 20px;
+            }
+            .modal-title {
+                font-size: 17px;
+            }
+            .modal-option .label {
+                font-size: 14px;
+            }
+            .modal-close-btn {
+                font-size: 15px;
+                padding: 12px;
+            }
+            .theme-option,
+            .style-option {
+                font-size: 15px;
+                padding: 10px 14px;
+            }
+            .pages-container {
+                padding-bottom: 56px;
+            }
+        }
 
-        .genre-track-item { display: flex; align-items: center; gap: 14px; cursor: pointer; padding: 6px 0; border-radius: 12px; background: transparent; border: none; }
-
-        .track-cover-wrapper { position: relative; width: 62px; height: 62px; flex-shrink: 0; }
-        .track-cover { width: 100%; height: 100%; border-radius: 8px; object-fit: cover; transition: filter 0.3s ease; }
-        .genre-track-item.is-playing .track-cover { filter: brightness(0.4); }
-        .playing-indicator { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display:flex; justify-content:center; align-items:center; gap:4px; border-radius:8px; opacity:0; transition: opacity 0.3s ease; background: rgba(0,0,0,0.2); }
-        .genre-track-item.is-playing .playing-indicator { opacity: 1; }
-        .playing-indicator .bar { width:4px; height:20%; background-color:#fff; border-radius:2px; }
-        @keyframes play-anim { 0%,100%{transform:scaleY(0.5);}50%{transform:scaleY(1.5);} }
-        .genre-track-item.is-playing .bar { animation: play-anim 1.2s ease-in-out infinite; }
-        .genre-track-item.is-playing .bar:nth-child(2) { animation-delay: 0.2s; }
-        .genre-track-item.is-playing .bar:nth-child(3) { animation-delay: 0.4s; }
-        .genre-track-item.is-playing .bar:nth-child(4) { animation-delay: 0.1s; }
-
-        .track-info { flex: 1; min-width: 0; }
-        .track-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
-        .track-meta { font-size: 13px; color: #b3b3b3; display:flex; align-items:center; gap:6px; }
-
-        .genre-track-options { color: rgba(255,255,255,0.5); font-size: 20px; padding: 0 10px 0 30px; cursor: pointer; transition: color 0.2s ease; background: transparent; border: none; font-weight: 600; letter-spacing: 2px; line-height: 1; display:inline-flex; align-items:center; justify-content:center; margin-left:auto; }
-        .genre-track-options:hover { color: rgba(255,255,255,0.8); }
+        .page {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+        @media (max-width: 600px) {
+            .page {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+        }
+        @media (max-width: 480px) {
+            .page {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+        @media (max-width: 380px) {
+            .page {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="app" role="application">
 
-    <div id="background-spots">
-        <div class="spot s4" id="s4"></div>
-        <div class="spot s1" id="s1"></div>
-        <div class="spot s2" id="s2"></div>
-        <div class="spot s3" id="s3"></div>
-        <div class="spot s5" id="s5"></div>
-        <div class="spot s6" id="s6"></div>
+        <!-- ===== КОНТЕЙНЕР СТРАНИЦ ===== -->
+        <div class="pages-container">
+
+            <!-- MAIN PAGE (VPN) -->
+            <div class="page page-main" id="pageMain">
+                <div class="main-scroll">
+                    <header class="header" role="banner">
+                        <div class="logo">
+                            <span class="brand">VEX</span>
+                        </div>
+                        <div class="top-actions" role="navigation" aria-label="Верхние действия">
+                            <button class="icon-btn" id="globeBtn" title="Серверы" aria-label="Серверы">
+                                <svg class="globe-icon-header" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.2" />
+                                    <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2.2" />
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="2.2" />
+                                </svg>
+                            </button>
+                            <button class="icon-btn" id="settingsHeaderBtn" title="Настройки" aria-label="Настройки">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.04 7.04 0 0 0-1.79-1.04l-.36-2.4a.49.49 0 0 0-.48-.41h-3.84a.49.49 0 0 0-.48.41l-.36 2.4c-.68.24-1.3.6-1.79 1.04l-2.39-.96a.49.49 0 0 0-.59.22l-1.92 3.32a.49.49 0 0 0 .12.61l2.03 1.58c-.05.63-.05 1.25 0 1.88l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.34.59.22l2.39-.96c.5.44 1.11.8 1.79 1.04l.36 2.4c.05.24.26.41.48.41h3.84c.22 0 .43-.17.48-.41l.36-2.4c.68-.24 1.3-.6 1.79-1.04l2.39.96c.22.12.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.03-1.58zM12 15.6A3.6 3.6 0 1 1 15.6 12 3.6 3.6 0 0 1 12 15.6z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                    </header>
+
+                    <section class="center" aria-label="Центральная кнопка включения">
+                        <div class="power-wrap" id="powerWrap" role="button" tabindex="0" aria-pressed="false" aria-label="Подключиться">
+                            <div class="outer-ring"></div>
+                            <div class="ring-bg"></div>
+                            <div class="ring-loader">
+                                <svg viewBox="0 0 280 280">
+                                    <circle cx="140" cy="140" r="130" />
+                                </svg>
+                            </div>
+                            <button class="inner-circle" id="powerBtn" aria-hidden="true" tabindex="-1">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+                                    <line x1="12" y1="2" x2="12" y2="12" />
+                                </svg>
+                                <svg class="icon-shield" viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    <polyline points="9 12 11 14 15 10" />
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="instruction" aria-live="polite">
+                        <div class="status-container" id="statusContainer">
+                            <h2 class="label" id="instrText">Нажмите, чтобы подключиться</h2>
+                            <div class="timer" id="timerDisplay">00:00:00</div>
+                        </div>
+                        <div style="display:flex;justify-content:center;margin-top:0">
+                            <div id="statusPill" class="status-pill" role="status" aria-atomic="true">
+                                <span class="status-dot" id="statusDot"></span>
+                                <span id="statusText">Не подключено</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="server-stats-new">
+                        <div class="server-stats-header">Мои сервера и подписки</div>
+                        <div class="server-container" id="serverInfoBox">
+                            <div class="top-row">
+                                <div class="country-block">
+                                    <div class="flag-box" id="serverFlagBox">
+                                        <svg class="globe-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.2" />
+                                            <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2.2" />
+                                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="2.2" />
+                                        </svg>
+                                    </div>
+                                    <span class="country-name" id="serverNameNew">Автоматически</span>
+                                </div>
+                                <span class="ping" id="serverPingNew">— <small>ms</small></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-placeholder">
+                        <div class="config-message">Нет конфигураций</div>
+                    </div>
+
+                    <div class="config-actions">
+                        <button id="fromBufferBtn" class="big-btn" aria-label="Добавить">
+                            <svg viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            <span>Добавить</span>
+                        </button>
+                        <button id="qrBtn" class="big-btn gray" aria-label="QR-код">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+                                <rect x="0.5" y="0.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
+                                <rect x="1.5" y="1.5" width="3" height="3" rx="0.3" fill="currentColor" />
+                                <rect x="18.5" y="0.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
+                                <rect x="19.5" y="1.5" width="3" height="3" rx="0.3" fill="currentColor" />
+                                <rect x="0.5" y="18.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
+                                <rect x="1.5" y="19.5" width="3" height="3" rx="0.3" fill="currentColor" />
+                                <rect x="18.5" y="18.5" width="5" height="5" rx="0.5" stroke="currentColor" fill="none" />
+                                <rect x="19.5" y="19.5" width="3" height="3" rx="0.3" fill="currentColor" />
+                                <rect x="7" y="7" width="1" height="1" fill="currentColor" />
+                                <rect x="9" y="7" width="1" height="1" fill="currentColor" />
+                                <rect x="11" y="7" width="1" height="1" fill="currentColor" />
+                                <rect x="14" y="7" width="1" height="1" fill="currentColor" />
+                                <rect x="16" y="7" width="1" height="1" fill="currentColor" />
+                                <rect x="7" y="9" width="1" height="1" fill="currentColor" />
+                                <rect x="11" y="9" width="1" height="1" fill="currentColor" />
+                                <rect x="14" y="9" width="1" height="1" fill="currentColor" />
+                                <rect x="16" y="9" width="1" height="1" fill="currentColor" />
+                                <rect x="8" y="11" width="1" height="1" fill="currentColor" />
+                                <rect x="10" y="11" width="1" height="1" fill="currentColor" />
+                                <rect x="12" y="11" width="1" height="1" fill="currentColor" />
+                                <rect x="14" y="11" width="1" height="1" fill="currentColor" />
+                                <rect x="16" y="11" width="1" height="1" fill="currentColor" />
+                                <rect x="7" y="12" width="1" height="1" fill="currentColor" />
+                                <rect x="9" y="12" width="1" height="1" fill="currentColor" />
+                                <rect x="13" y="12" width="1" height="1" fill="currentColor" />
+                                <rect x="15" y="12" width="1" height="1" fill="currentColor" />
+                                <rect x="7" y="14" width="1" height="1" fill="currentColor" />
+                                <rect x="10" y="14" width="1" height="1" fill="currentColor" />
+                                <rect x="12" y="14" width="1" height="1" fill="currentColor" />
+                                <rect x="14" y="14" width="1" height="1" fill="currentColor" />
+                                <rect x="16" y="14" width="1" height="1" fill="currentColor" />
+                                <rect x="7" y="16" width="1" height="1" fill="currentColor" />
+                                <rect x="9" y="16" width="1" height="1" fill="currentColor" />
+                                <rect x="11" y="16" width="1" height="1" fill="currentColor" />
+                                <rect x="14" y="16" width="1" height="1" fill="currentColor" />
+                                <rect x="16" y="16" width="1" height="1" fill="currentColor" />
+                            </svg>
+                            <span>QR-код</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVERS PAGE -->
+            <div class="page page-servers" id="pageServers">
+                <div class="server-content">
+                    <div class="servers-top">
+                        <button class="back-btn" id="backFromServers" aria-label="Назад">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 12H5" stroke="currentColor" />
+                                <path d="M12 19l-7-7 7-7" stroke="currentColor" />
+                            </svg>
+                        </button>
+                        <span class="page-title">Серверы</span>
+                        <button class="refresh-btn" id="refreshServers" aria-label="Обновить">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 2v6h-6" stroke="currentColor" />
+                                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" stroke="currentColor" />
+                                <path d="M3 22v-6h6" stroke="currentColor" />
+                                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" stroke="currentColor" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="my-servers-header" style="font-size:18px; text-transform:none; opacity:1; padding:4px 4px 12px; color:var(--text-primary);">Сервера и подписки</div>
+                    <div class="server-cards top-cards">
+                        <div class="server-card active visible" data-server="auto" data-name="Автоматически" data-ping="30" data-cc="auto" data-protocol="—">
+                            <div class="card-icon">
+                                <svg class="globe-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.2" />
+                                    <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2.2" />
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="2.2" />
+                                </svg>
+                            </div>
+                            <div class="card-info">
+                                <div class="name">Автоматически</div>
+                                <div class="sub">30 ms</div>
+                            </div>
+                            <div class="card-right">
+                                <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            </div>
+                        </div>
+                        <div class="server-card premium visible" data-server="it" data-name="IT · Милан" data-ping="45" data-cc="it" data-protocol="VLESS">
+                            <div class="card-icon"><span class="fi fi-it"></span></div>
+                            <div class="card-info">
+                                <div class="name">IT · Милан</div>
+                                <div class="sub">45 ms</div>
+                            </div>
+                            <div class="card-right">
+                                <div class="premium-block">
+                                    <span class="premium-label">Премиум</span>
+                                    <span class="lock-circle">🔒</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="server-card premium visible" data-server="es" data-name="ES · Мадрид" data-ping="52" data-cc="es" data-protocol="WireGuard">
+                            <div class="card-icon"><span class="fi fi-es"></span></div>
+                            <div class="card-info">
+                                <div class="name">ES · Мадрид</div>
+                                <div class="sub">52 ms</div>
+                            </div>
+                            <div class="card-right">
+                                <div class="premium-block">
+                                    <span class="premium-label">Премиум</span>
+                                    <span class="lock-circle">🔒</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-servers-section">
+                        <div class="my-servers-header">Мои сервера</div>
+                        <div class="server-cards rest-cards">
+                            <div class="server-card" data-server="england" data-name="England" data-ping="63" data-cc="gb" data-protocol="VLESS">
+                                <div class="card-icon"><span class="fi fi-gb"></span></div>
+                                <div class="card-info">
+                                    <div class="name">England</div>
+                                    <div class="sub">63 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="ru" data-name="RU · Москва" data-ping="34" data-cc="ru" data-protocol="VLESS">
+                                <div class="card-icon"><span class="fi fi-ru"></span></div>
+                                <div class="card-info">
+                                    <div class="name">RU · Москва</div>
+                                    <div class="sub">34 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="de" data-name="DE · Франкфурт" data-ping="62" data-cc="de" data-protocol="VLESS">
+                                <div class="card-icon"><span class="fi fi-de"></span></div>
+                                <div class="card-info">
+                                    <div class="name">DE · Франкфурт</div>
+                                    <div class="sub">62 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="us" data-name="US · Нью-Йорк" data-ping="118" data-cc="us" data-protocol="WireGuard">
+                                <div class="card-icon"><span class="fi fi-us"></span></div>
+                                <div class="card-info">
+                                    <div class="name">US · Нью-Йорк</div>
+                                    <div class="sub">118 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="nl" data-name="NL · Амстердам" data-ping="275" data-cc="nl" data-protocol="VLESS">
+                                <div class="card-icon"><span class="fi fi-nl"></span></div>
+                                <div class="card-info">
+                                    <div class="name">NL · Амстердам</div>
+                                    <div class="sub">275 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="fr" data-name="FR · Париж" data-ping="150" data-cc="fr" data-protocol="OpenVPN">
+                                <div class="card-icon"><span class="fi fi-fr"></span></div>
+                                <div class="card-info">
+                                    <div class="name">FR · Париж</div>
+                                    <div class="sub">150 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="gb" data-name="GB · Лондон" data-ping="100" data-cc="gb" data-protocol="VLESS">
+                                <div class="card-icon"><span class="fi fi-gb"></span></div>
+                                <div class="card-info">
+                                    <div class="name">GB · Лондон</div>
+                                    <div class="sub">100 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="jp" data-name="JP · Токио" data-ping="220" data-cc="jp" data-protocol="WireGuard">
+                                <div class="card-icon"><span class="fi fi-jp"></span></div>
+                                <div class="card-info">
+                                    <div class="name">JP · Токио</div>
+                                    <div class="sub">220 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card offline" data-server="german" data-name="German" data-ping="248" data-cc="de" data-protocol="VLESS">
+                                <div class="card-icon"><span class="fi fi-de"></span></div>
+                                <div class="card-info">
+                                    <div class="name">German</div>
+                                    <div class="sub">Недоступен</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="server-card" data-server="netherlands" data-name="Netherlands" data-ping="275" data-cc="nl" data-protocol="VLESS">
+                                <div class="card-icon"><span class="fi fi-nl"></span></div>
+                                <div class="card-info">
+                                    <div class="name">Netherlands</div>
+                                    <div class="sub">275 ms</div>
+                                </div>
+                                <div class="card-right">
+                                    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="apply-btn-wrap">
+                        <button class="apply-btn" id="applyServerBtn">Применить</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS PAGE -->
+            <div class="page page-settings" id="pageSettings">
+                <div class="settings-content">
+                    <div class="settings-top">
+                        <button class="back-btn" id="backFromSettings" aria-label="Назад">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 12H5" stroke="currentColor" />
+                                <path d="M12 19l-7-7 7-7" stroke="currentColor" />
+                            </svg>
+                        </button>
+                        <span class="page-title">Настройки</span>
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="settings-body">
+                        <div class="settings-group">
+                            <div class="group-label">ОФОРМЛЕНИЕ</div>
+                            <div class="setting-card">
+                                <div class="setting-row">
+                                    <span class="label">Тема</span>
+                                    <div class="value">
+                                        <button class="pill-value" id="themePill">Авто</button>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <span class="label">Стиль подключения</span>
+                                    <div class="value">
+                                        <button class="pill-value" id="stylePill">Классический</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <div class="group-label">СОЕДИНЕНИЕ</div>
+                            <div class="setting-card">
+                                <div class="setting-row">
+                                    <span class="label">При запуске</span>
+                                    <button class="toggle-switch" id="startupToggle" role="switch" aria-checked="false">
+                                        <span class="thumb"></span>
+                                    </button>
+                                </div>
+                                <div class="setting-row">
+                                    <span class="label">Соединение</span>
+                                    <button class="value action-btn" id="connectionSetupBtn">Настроить</button>
+                                </div>
+                                <div class="setting-row">
+                                    <span class="label">Туннель</span>
+                                    <button class="value action-btn" id="tunnelSetupBtn">Настроить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <div class="group-label">ПРОВАЙДЕРЫ</div>
+                            <div class="setting-card">
+                                <div class="setting-row">
+                                    <span class="label">Сортировка списка серверов</span>
+                                    <div class="value">
+                                        <button class="pill-value" data-modal="sortModal">Авто</button>
+                                    </div>
+                                </div>
+                                <div class="setting-row">
+                                    <span class="label">Настройки провайдеров</span>
+                                    <button class="toggle-switch active" id="providersToggle" role="switch" aria-checked="true">
+                                        <span class="thumb"></span>
+                                    </button>
+                                </div>
+                                <div class="setting-row">
+                                    <span class="label">Настройки пинга</span>
+                                    <div class="value">
+                                        <button class="pill-value" data-modal="pingModal">INCY Ping</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <div class="group-label">ПРИЛОЖЕНИЕ</div>
+                            <div class="setting-card">
+                                <div class="setting-row"><span class="label">Подключение</span><button class="value action-btn" id="appConnectBtn">Открыть</button></div>
+                                <div class="setting-row"><span class="label">Сервера</span><button class="value action-btn" id="appServersBtn">Открыть</button></div>
+                                <div class="setting-row"><span class="label">Настройки</span><button class="value action-btn" id="appSettingsBtn">Открыть</button></div>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <div class="group-label">ИНФОРМАЦИЯ</div>
+                            <div class="setting-card">
+                                <div class="setting-row"><span class="label">Версия iOS</span><span class="value" style="font-size:14px;">2.5.1 (1008261924)</span></div>
+                                <div class="setting-row"><span class="label">О приложении</span><span class="value">INCY</span></div>
+                                <div class="setting-row"><span class="label">Схемы URL-адресов</span><span class="value">incv://</span></div>
+                                <div class="setting-row"><span class="label">Резервное копирование</span><button class="value action-btn" id="backupBtn">Открыть</button></div>
+                                <div class="setting-row"><span class="label">Оценить приложение</span><button class="value action-btn" id="rateBtn">Оценить</button></div>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <div class="group-label">ПРОИЗВОДИТЕЛЬНОСТЬ</div>
+                            <div class="setting-card">
+                                <div class="setting-row"><span class="label">Расширенные настройки</span><span class="value">Xray Core</span></div>
+                                <div class="setting-row"><span class="label">Отключать при блокировке</span><button class="toggle-switch" id="lockToggle" role="switch" aria-checked="false"><span class="thumb"></span></button></div>
+                                <div class="setting-row"><span class="label">Мониторинг памяти</span><button class="toggle-switch" id="memToggle" role="switch" aria-checked="false"><span class="thumb"></span></button></div>
+                            </div>
+                        </div>
+                        <div class="settings-group">
+                            <div class="group-label">ОТЛАДКА</div>
+                            <div class="setting-card">
+                                <div class="setting-row">
+                                    <span class="label">Логи туннеля</span>
+                                    <div class="value" style="font-size:14px;color:var(--text-muted);">Выключены • 1 час</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="reset-btn" id="resetSettingsBtn">Сбросить настройки</button>
+                        <div style="text-align:center;padding:10px 0 4px;font-size:13px;color:var(--text-muted);">Vex VPN v0.0.1 Бетта</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THEME PAGE -->
+            <div class="page page-theme" id="pageTheme">
+                <div class="theme-content">
+                    <div class="settings-top">
+                        <button class="back-btn" id="backFromTheme" aria-label="Назад">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 12H5" stroke="currentColor" />
+                                <path d="M12 19l-7-7 7-7" stroke="currentColor" />
+                            </svg>
+                        </button>
+                        <span class="page-title">Тема</span>
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="settings-body">
+                        <div class="theme-options">
+                            <button class="theme-option" data-theme="auto">Авто</button>
+                            <button class="theme-option" data-theme="light">Дневная</button>
+                            <button class="theme-option" data-theme="dark">Тёмная</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STYLE PAGE -->
+            <div class="page page-style" id="pageStyle">
+                <div class="style-content">
+                    <div class="settings-top">
+                        <button class="back-btn" id="backFromStyle" aria-label="Назад">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 12H5" stroke="currentColor" />
+                                <path d="M12 19l-7-7 7-7" stroke="currentColor" />
+                            </svg>
+                        </button>
+                        <span class="page-title">Стиль подключения</span>
+                        <div class="spacer"></div>
+                    </div>
+                    <div class="settings-body">
+                        <div class="style-options">
+                            <button class="style-option" data-style="classic">Классический</button>
+                            <button class="style-option" data-style="compact">Компактный</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== НИЖНЯЯ ПАНЕЛЬ ===== -->
+        <div class="bottom-nav">
+            <div class="nav-container" id="navContainer">
+                <div class="indicator no-transition" id="indicator"></div>
+
+                <div class="nav-item active" data-index="0">
+                    <span class="icon"><i class="fas fa-shield"></i></span>
+                    <span class="label">VPN</span>
+                </div>
+                <div class="nav-item" data-index="1">
+                    <span class="icon"><i class="fas fa-star"></i></span>
+                    <span class="label">Подписка</span>
+                </div>
+                <div class="nav-item" data-index="2">
+                    <span class="icon"><i class="fas fa-gear"></i></span>
+                    <span class="label">Настройки</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL ===== -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-sheet" id="modalSheet">
+                <div class="modal-handle"></div>
+                <div class="modal-title" id="modalTitle">Выберите вариант</div>
+                <div id="modalOptions"></div>
+                <button class="modal-close-btn" id="modalCloseBtn">Закрыть</button>
+            </div>
+        </div>
+
     </div>
-
-    <div class="page-header">
-        <div class="page-title">Треки по жанрам</div>
-    </div>
-
-    <div class="genre-list" id="genreList">
-        <button class="genre-item active" data-color="#FF3B30">Рок</button>
-        <button class="genre-item" data-color="#9D00FF">Фонк</button>
-        <button class="genre-item" data-color="#00A86B">Фолк</button>
-        <button class="genre-item" data-color="#007AFF">Хип-хоп</button>
-        <button class="genre-item" data-color="#FF2D55">Поп</button>
-        <button class="genre-item" data-color="#FF9500">Джаз</button>
-        <button class="genre-item" data-color="#32D74B">Инди</button>
-        <button class="genre-item" data-color="#AF52DE">Метал</button>
-        <button class="genre-item" data-color="#5AC8FA">Электроника</button>
-        <button class="genre-item" data-color="#FFCC00">R&B</button>
-        <button class="genre-item" data-color="#8E8E93">Лоу-фай</button>
-    </div>
-
-    <div class="music-container" id="musicContainer"></div>
 
     <script>
-        // данные как раньше (сокращены встраиваем)
-        const testImages = [
-            'https://picsum.photos/id/100/400/400', 'https://picsum.photos/id/101/400/400', 'https://picsum.photos/id/102/400/400',
-            'https://picsum.photos/id/103/400/400', 'https://picsum.photos/id/104/400/400', 'https://picsum.photos/id/105/400/400'
-        ];
-        const musicData = {
-            "Рок":[{n:"ПОСЛЕДНИЙ NOTHING",a:"Toxi$, MORGENSHTERN",img:testImages[0]},{n:"ПОД КОЖУ",a:"Райни",img:testImages[1]},{n:"ТЫ НИЧЕГО НЕ ПОНЯЛА",a:"choldd",img:testImages[2]},{n:"NUMB",a:"Linkin Park",img:testImages[3]},{n:"DU HAST",a:"Rammstein",img:testImages[4]},{n:"SMELLS LIKE",a:"Nirvana",img:testImages[5]}],
-            "Фонк":[{n:"MURDER IN MY MIND",a:"Kordhell",img:testImages[0]},{n:"SAHARA",a:"Hensonn",img:testImages[1]},{n:"METAMORPHOSIS",a:"INTERWORLD",img:testImages[2]},{n:"OVERRIDE",a:"KSLV Noh",img:testImages[3]},{n:"AVALON",a:"$uicideboy$",img:testImages[4]},{n:"SCARY GARY",a:"Kaito Shoma",img:testImages[5]}],
-            "Фолк":[{n:"КАЛИНКА",a:"Иван Купала",img:testImages[0]},{n:"ВО ПОЛЕ БЕРЕЗА",a:"Пелагея",img:testImages[1]},{n:"ОЙ, ТО НЕ ВЕЧЕР",a:"Мельница",img:testImages[2]},{n:"КОНЬ",a:"Любэ",img:testImages[3]},{n:"ЧЁРНЫЙ ВОРОН",a:"Алиса",img:testImages[4]},{n:"ТРАВА У ДОМА",a:"Земляне",img:testImages[5]}],
-            "Хип-хоп":[{n:"GODZILLA",a:"Eminem",img:testImages[0]},{n:"SICKO MODE",a:"Travis Scott",img:testImages[1]},{n:"HUMBLE",a:"Kendrick Lamar",img:testImages[2]},{n:"STARBOY",a:"The Weeknd",img:testImages[3]},{n:"INDUSTRY BABY",a:"Lil Nas X",img:testImages[4]},{n:"MONTERO",a:"Lil Nas X",img:testImages[5]}],
-            "Поп":[{n:"BLINDING LIGHTS",a:"The Weeknd",img:testImages[0]},{n:"LEVITATING",a:"Dua Lipa",img:testImages[1]},{n:"BAD GUY",a:"Billie Eilish",img:testImages[2]},{n:"DRIVERS LICENSE",a:"Olivia Rodrigo",img:testImages[3]},{n:"AS IT WAS",a:"Harry Styles",img:testImages[4]},{n:"SHAPE OF YOU",a:"Ed Sheeran",img:testImages[5]}],
-            "Джаз":[{n:"TAKE FIVE",a:"Dave Brubeck",img:testImages[0]},{n:"SO WHAT",a:"Miles Davis",img:testImages[1]},{n:"FEELING GOOD",a:"Nina Simone",img:testImages[2]},{n:"FLY ME TO THE MOON",a:"Frank Sinatra",img:testImages[3]},{n:"MY FUNNY VALENTINE",a:"Chet Baker",img:testImages[4]},{n:"AUTUMN LEAVES",a:"Bill Evans",img:testImages[5]}],
-            "Инди":[{n:"DOG DAYS ARE OVER",a:"Florence + The Machine",img:testImages[0]},{n:"HOLOCENE",a:"Bon Iver",img:testImages[1]},{n:"ELECTRIC FEEL",a:"MGMT",img:testImages[2]},{n:"WEIGHTY GHOST",a:"Westerman",img:testImages[3]},{n:"APOCALYPSE",a:"Cigarettes After Sex",img:testImages[4]},{n:"SWEET",a:"Cigarettes After Sex",img:testImages[5]}],
-            "Метал":[{n:"MASTER OF PUPPETS",a:"Metallica",img:testImages[0]},{n:"PARANOID",a:"Black Sabbath",img:testImages[1]},{n:"HALLOWED BE THY NAME",a:"Iron Maiden",img:testImages[2]},{n:"PAIN KILLER",a:"Judas Priest",img:testImages[3]},{n:"RAINING BLOOD",a:"Slayer",img:testImages[4]},{n:"DUALITY",a:"Slipknot",img:testImages[5]}],
-            "Электроника":[{n:"STROBE",a:"deadmau5",img:testImages[0]},{n:"OPUS",a:"Eric Prydz",img:testImages[1]},{n:"ANIMALS",a:"Martin Garrix",img:testImages[2]},{n:"LEVELS",a:"Avicii",img:testImages[3]},{n:"SANDSTORM",a:"Darude",img:testImages[4]},{n:"CLARITY",a:"Zedd",img:testImages[5]}],
-            "R&B":[{n:"BLAME IT",a:"Jamie Foxx",img:testImages[0]},{n:"ORDINARY PEOPLE",a:"John Legend",img:testImages[1]},{n:"UMBRELLA",a:"Rihanna",img:testImages[2]},{n:"NO ONE",a:"Alicia Keys",img:testImages[3]},{n:"WE BELONG TOGETHER",a:"Mariah Carey",img:testImages[4]},{n:"IRREPLACEABLE",a:"Beyoncé",img:testImages[5]}],
-            "Лоу-фай":[{n:"SNOWFALL",a:"Øneheart",img:testImages[0]},{n:"LOFI HIP HOP BEATS",a:"Chillhop",img:testImages[1]},{n:"STUDY BEATS",a:"Lofi Girl",img:testImages[2]},{n:"RAINY NIGHT",a:"Lofi Fruits",img:testImages[3]},{n:"DREAMS",a:"Lofi Fruits",img:testImages[4]},{n:"MEMORIES",a:"Lofi Fruits",img:testImages[5]}]
+        // ============================================================
+        //  THEME ENGINE
+        // ============================================================
+        const THEME_KEY = 'vex_theme';
+        const STYLE_KEY = 'vex_style';
+
+        const html = document.documentElement;
+        let currentTheme = localStorage.getItem(THEME_KEY) || 'dark';
+        let currentStyle = localStorage.getItem(STYLE_KEY) || 'classic';
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'auto') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                html.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+            } else {
+                html.setAttribute('data-theme', theme);
+            }
+            localStorage.setItem(THEME_KEY, theme);
+            const themePill = document.getElementById('themePill');
+            if (themePill) {
+                const map = { auto: 'Авто', light: 'Дневная', dark: 'Тёмная' };
+                themePill.textContent = map[theme] || 'Авто';
+            }
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.theme === theme);
+            });
+        }
+
+        function applyStyle(style) {
+            currentStyle = style;
+            localStorage.setItem(STYLE_KEY, style);
+            const stylePill = document.getElementById('stylePill');
+            if (stylePill) {
+                const map = { classic: 'Классический', compact: 'Компактный' };
+                stylePill.textContent = map[style] || 'Классический';
+            }
+            const addBtn = document.getElementById('fromBufferBtn');
+            if (addBtn) {
+                addBtn.classList.toggle('hidden', style === 'compact');
+            }
+            document.querySelectorAll('.style-option').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.style === style);
+            });
+        }
+
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        mediaQuery.addEventListener('change', () => {
+            if (currentTheme === 'auto') {
+                html.setAttribute('data-theme', mediaQuery.matches ? 'dark' : 'light');
+            }
+        });
+
+        // ============================================================
+        //  NAVIGATION: SETTINGS (через кнопку в хедере)
+        // ============================================================
+        const pageMain = document.getElementById('pageMain');
+        const pageSettings = document.getElementById('pageSettings');
+        const backFromSettings = document.getElementById('backFromSettings');
+        const settingsHeaderBtn = document.getElementById('settingsHeaderBtn');
+
+        function openSettingsPage() {
+            pageMain.classList.add('slide-out');
+            pageSettings.classList.add('active');
+            setBottomNavActive(2); // настройки
+        }
+
+        function closeSettingsPage() {
+            pageSettings.classList.remove('active');
+            pageMain.classList.remove('slide-out');
+            setBottomNavActive(0); // VPN
+        }
+
+        settingsHeaderBtn.addEventListener('click', openSettingsPage);
+        backFromSettings.addEventListener('click', closeSettingsPage);
+
+        // ============================================================
+        //  NAVIGATION: THEME
+        // ============================================================
+        const pageTheme = document.getElementById('pageTheme');
+        const backFromTheme = document.getElementById('backFromTheme');
+
+        document.getElementById('themePill').addEventListener('click', () => {
+            pageSettings.classList.remove('active');
+            pageTheme.classList.add('active');
+        });
+
+        function closeThemePage() {
+            pageTheme.classList.remove('active');
+            pageSettings.classList.add('active');
+        }
+        backFromTheme.addEventListener('click', closeThemePage);
+
+        document.querySelectorAll('.theme-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                applyTheme(this.dataset.theme);
+                closeThemePage();
+            });
+        });
+
+        // ============================================================
+        //  NAVIGATION: STYLE
+        // ============================================================
+        const pageStyle = document.getElementById('pageStyle');
+        const backFromStyle = document.getElementById('backFromStyle');
+
+        document.getElementById('stylePill').addEventListener('click', () => {
+            pageSettings.classList.remove('active');
+            pageStyle.classList.add('active');
+        });
+
+        function closeStylePage() {
+            pageStyle.classList.remove('active');
+            pageSettings.classList.add('active');
+        }
+        backFromStyle.addEventListener('click', closeStylePage);
+
+        document.querySelectorAll('.style-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                applyStyle(this.dataset.style);
+                closeStylePage();
+            });
+        });
+
+        // ============================================================
+        //  NAVIGATION: SERVERS
+        // ============================================================
+        const pageServers = document.getElementById('pageServers');
+        const backFromServers = document.getElementById('backFromServers');
+        const applyServerBtn = document.getElementById('applyServerBtn');
+
+        function animateServerCards() {
+            const cards = document.querySelectorAll('.server-card:not(.visible)');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, 50 + index * 40);
+            });
+        }
+
+        document.getElementById('serverInfoBox').addEventListener('click', () => {
+            pageMain.classList.add('slide-out');
+            pageServers.classList.add('active');
+            setBottomNavActive(1); // подписка
+            setTimeout(animateServerCards, 100);
+        });
+
+        document.getElementById('globeBtn').addEventListener('click', () => {
+            pageMain.classList.add('slide-out');
+            pageServers.classList.add('active');
+            setBottomNavActive(1);
+            setTimeout(animateServerCards, 100);
+        });
+
+        function closeServersPage() {
+            pageServers.classList.remove('active');
+            pageMain.classList.remove('slide-out');
+            setBottomNavActive(0);
+        }
+        backFromServers.addEventListener('click', closeServersPage);
+
+        document.querySelectorAll('.server-card:not(.premium)').forEach(card => {
+            card.addEventListener('click', function() {
+                if (this.classList.contains('offline')) return;
+                document.querySelectorAll('.server-card:not(.premium)').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function updateMainCards(name, ping, cc) {
+            const flagBox = document.getElementById('serverFlagBox');
+            if (name === 'Автоматически' || cc === 'auto') {
+                flagBox.innerHTML = `
+                            <svg class="globe-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.2" />
+                                <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="2.2" />
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="2.2" />
+                            </svg>
+                        `;
+                document.getElementById('serverNameNew').textContent = 'Автоматически';
+            } else {
+                flagBox.innerHTML = `<span class="fi fi-${cc}"></span>`;
+                document.getElementById('serverNameNew').textContent = name;
+            }
+            const pingElement = document.getElementById('serverPingNew');
+            if (!ping || ping <= 0) {
+                pingElement.innerHTML = '— <small>ms</small>';
+                pingElement.className = 'ping';
+            } else {
+                pingElement.innerHTML = ping + ' <small>ms</small>';
+                pingElement.classList.remove('ping-low', 'ping-mid', 'ping-high');
+                if (ping < 50) { pingElement.classList.add('ping-low'); } else if (ping < 150) { pingElement.classList
+                        .add('ping-mid'); } else { pingElement.classList.add('ping-high'); }
+            }
+        }
+
+        applyServerBtn.addEventListener('click', () => {
+            const activeCard = document.querySelector('.server-card.active');
+            if (activeCard) {
+                const name = activeCard.dataset.name;
+                const ping = parseInt(activeCard.dataset.ping, 10) || 0;
+                const cc = activeCard.dataset.cc || 'auto';
+                updateMainCards(name, ping, cc);
+            }
+            closeServersPage();
+        });
+
+        // ============================================================
+        //  MODAL
+        // ============================================================
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalOptions = document.getElementById('modalOptions');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+        const modalData = {
+            sortModal: {
+                title: 'Сортировка списка серверов',
+                options: ['Авто', 'По пингу', 'По имени', 'Без сортировки'],
+                current: 'Авто'
+            },
+            pingModal: {
+                title: 'Настройки пинга',
+                options: ['INCY Ping', 'TCP (рекомендуется)', 'HTTP GET', 'HTTP HEAD', 'ICMP'],
+                current: 'INCY Ping'
+            }
         };
 
-        // state
-        let currentPlayingTrackId = null;
-        let activeGenre = 'Рок';
-
-        // spot elements
-        const spots = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3'), document.getElementById('s4'), document.getElementById('s5'), document.getElementById('s6')];
-
-        // helper: hex <-> hsl conversions
-        function hexToRgb(hex) {
-            const h = hex.replace('#','');
-            const bigint = parseInt(h,16);
-            return { r: (bigint>>16)&255, g:(bigint>>8)&255, b: bigint&255 };
-        }
-        function rgbToHsl(r,g,b) {
-            r/=255; g/=255; b/=255;
-            const max = Math.max(r,g,b), min = Math.min(r,g,b);
-            let h,s,l = (max+min)/2;
-            if(max===min){h=s=0;} else {
-                const d = max-min;
-                s = l>0.5? d/(2-max-min) : d/(max+min);
-                switch(max){ case r: h = (g-b)/d + (g<b?6:0); break; case g: h = (b-r)/d + 2; break; default: h = (r-g)/d +4; }
-                h /= 6;
-            }
-            return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
-        }
-        function hslToCss(h,s,l,a=1){ return `hsla(${h}, ${s}%, ${l}%, ${a})`; }
-
-        // generate warm/cool variants from main color
-        function makePalette(hex){
-            const rgb = hexToRgb(hex); const hsl = rgbToHsl(rgb.r,rgb.g,rgb.b);
-            const baseH = hsl.h, baseS = hsl.s, baseL = hsl.l;
-            // create 6 variants by shifting hue and changing lightness
-            return [
-                {h: (baseH+0)%360, s: Math.min(100, baseS+10), l: Math.min(80, baseL+10)},
-                {h: (baseH+28)%360, s: Math.min(100, baseS+5), l: Math.min(75, baseL+5)},
-                {h: (baseH-40+360)%360, s: Math.min(100, baseS+15), l: Math.max(35, baseL-5)},
-                {h: (baseH+6)%360, s: Math.min(100, baseS+20), l: Math.min(70, baseL+12)},
-                {h: (baseH+200)%360, s: Math.min(100, baseS+5), l: Math.min(65, baseL+10)},
-                {h: (baseH+50)%360, s: Math.min(100, baseS+8), l: Math.min(60, baseL+8)}
-            ].map(x => hslToCss(x.h,x.s,x.l,0.95));
-        }
-
-        // apply palette to spot backgrounds (inner & main stops)
-        function applyMultiSpots(hex) {
-            const pal = makePalette(hex);
-            // assign CSS backgrounds for spots (using two stops each: inner lighter + main)
-            spots[0].style.background = `radial-gradient(circle at 48% 42%, ${pal[0]} 0%, ${pal[1]} 35%, rgba(0,0,0,0) 75%)`;
-            spots[1].style.background = `radial-gradient(circle at 60% 28%, ${pal[2]} 0%, ${pal[0]} 30%, rgba(0,0,0,0) 78%)`;
-            spots[2].style.background = `radial-gradient(circle at 32% 68%, ${pal[3]} 0%, ${pal[2]} 34%, rgba(0,0,0,0) 80%)`;
-            spots[3].style.background = `radial-gradient(circle at 50% 50%, ${pal[1]} 0%, ${pal[4]} 30%, rgba(0,0,0,0) 70%)`;
-            spots[4].style.background = `radial-gradient(circle at 22% 30%, ${pal[5]} 0%, ${pal[0]} 36%, rgba(0,0,0,0) 82%)`;
-            spots[5].style.background = `radial-gradient(circle at 82% 62%, ${pal[0]} 0%, ${pal[1]} 34%, rgba(0,0,0,0) 80%)`;
-
-            // slightly vary blur/opacity based on colors to keep natural look
-            spots.forEach((el,i)=>{
-                const o = 0.82 + (i%3)*0.05;
-                el.style.opacity = o;
-            });
-        }
-
-        // ===== переключение режимов =====
-        function setNeutralMode(){
-            // multicenter warm default like screenshot
-            applyMultiSpots('#FFB04A');
-            document.documentElement.style.removeProperty('--spot-color');
-        }
-        function setGenreMode(color){
-            applyMultiSpots(color);
-            document.documentElement.style.setProperty('--spot-color', color);
-        }
-
-        // ===== render tracks (как раньше) =====
-        function renderGenreTracks(genre){
-            const musicContainer = document.getElementById('musicContainer');
-            musicContainer.innerHTML = '';
-            const tracks = musicData[genre] || [];
-            if(tracks.length===0){ musicContainer.innerHTML = '<div style="color: rgba(255,255,255,0.3); padding: 20px;">Нет треков</div>'; return; }
-            const tracksPerColumn = 3;
-            const columnCount = Math.ceil(tracks.length / tracksPerColumn);
-            for(let colIndex=0; colIndex<columnCount; colIndex++){
-                const column = document.createElement('div'); column.className='tracks-column-genre';
-                const start = colIndex*tracksPerColumn; const end = Math.min(start+tracksPerColumn, tracks.length);
-                const columnTracks = tracks.slice(start,end);
-                columnTracks.forEach(t=>{
-                    const trackElem = document.createElement('div'); trackElem.className='genre-track-item'; trackElem.dataset.trackName = t.n;
-                    const coverWrapper = document.createElement('div'); coverWrapper.className='track-cover-wrapper';
-                    coverWrapper.innerHTML = `<img src="${t.img}" class="track-cover" alt="${t.n}"><div class="playing-indicator"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>`;
-                    const trackInfo = document.createElement('div'); trackInfo.className='track-info'; trackInfo.innerHTML = `<div class="track-name">${escapeHtml(t.n)}</div><div class="track-meta">${escapeHtml(t.a)}</div>`;
-                    const optionsBtn = document.createElement('button'); optionsBtn.className='genre-track-options'; optionsBtn.textContent='⋯'; optionsBtn.onclick = (e)=>{ e.stopPropagation(); console.log(`Действие для трека "${t.n}"`); };
-                    trackElem.appendChild(coverWrapper); trackElem.appendChild(trackInfo); trackElem.appendChild(optionsBtn);
-                    trackElem.addEventListener('click', function(){ document.querySelectorAll('.genre-track-item').forEach(el=>el.classList.remove('is-playing')); this.classList.add('is-playing'); currentPlayingTrackId = t.n; console.log(`▶ Воспроизведение: ${t.n} — ${t.a}`); });
-                    column.appendChild(trackElem);
+        function openModal(modalId) {
+            const data = modalData[modalId];
+            if (!data) return;
+            modalTitle.textContent = data.title;
+            modalOptions.innerHTML = '';
+            data.options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'modal-option' + (opt === data.current ? ' selected' : '');
+                div.innerHTML = `
+                            <span class="label">${opt}</span>
+                            <span class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+                        `;
+                div.addEventListener('click', () => {
+                    modalOptions.querySelectorAll('.modal-option').forEach(el => el.classList.remove('selected'));
+                    div.classList.add('selected');
+                    const trigger = document.querySelector(`[data-modal="${modalId}"]`);
+                    if (trigger) trigger.textContent = opt;
+                    modalData[modalId].current = opt;
+                    setTimeout(closeModal, 400);
                 });
-                musicContainer.appendChild(column);
-            }
-            if(currentPlayingTrackId){ document.querySelectorAll('.genre-track-item').forEach(el=>{ const name = el.querySelector('.track-name')?.textContent; if(name===currentPlayingTrackId) el.classList.add('is-playing'); }); }
-        }
-        function escapeHtml(str){ return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
-
-        // ===== переключение жанров =====
-        function setupGenreSwitching(){
-            const buttons = document.querySelectorAll('.genre-item');
-            buttons.forEach(btn=>{
-                btn.addEventListener('click', function(){
-                    const genreName = this.textContent; const color = this.dataset.color;
-                    if(this.classList.contains('active')){ buttons.forEach(b=>b.classList.remove('active')); setNeutralMode(); activeGenre = null; return; }
-                    buttons.forEach(b=>b.classList.remove('active')); this.classList.add('active'); setGenreMode(color); activeGenre = genreName; renderGenreTracks(genreName);
-                    const btnLeft = this.offsetLeft; const btnWidth = this.offsetWidth; const listWidth = this.parentElement.clientWidth;
-                    this.parentElement.scrollTo({ left: btnLeft - listWidth/2 + btnWidth/2, behavior: 'smooth' });
-                    document.getElementById('musicContainer').scrollTo({ left: 0, behavior: 'smooth' });
-                });
+                modalOptions.appendChild(div);
             });
+            modalOverlay.classList.add('active');
         }
 
-        // init
-        document.addEventListener('DOMContentLoaded', ()=>{
-            const defaultGenre = 'Рок'; const defaultColor = '#FF3B30';
-            setGenreMode(defaultColor);
-            renderGenreTracks(defaultGenre);
-            setupGenreSwitching();
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        document.querySelectorAll('[data-modal]').forEach(el => {
+            el.addEventListener('click', () => {
+                const modalId = el.dataset.modal;
+                if (modalData[modalId]) {
+                    modalData[modalId].current = el.textContent.trim();
+                    openModal(modalId);
+                }
+            });
         });
+
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        // ============================================================
+        //  TOGGLES
+        // ============================================================
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            const checked = toggle.getAttribute('aria-checked') === 'true';
+            toggle.classList.toggle('active', checked);
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = this.classList.toggle('active');
+                this.setAttribute('aria-checked', String(isActive));
+            });
+        });
+
+        // ============================================================
+        //  ACTION BUTTONS (stubs)
+        // ============================================================
+        document.querySelectorAll('.action-btn, #connectionSetupBtn, #tunnelSetupBtn, #backupBtn, #rateBtn, #appConnectBtn, #appServersBtn, #appSettingsBtn')
+            .forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const label = btn.closest('.setting-row')?.querySelector('.label')?.textContent || 'настройка';
+                    alert(`⚙️ ${label}: действие выполняется`);
+                });
+            });
+
+        document.getElementById('resetSettingsBtn').addEventListener('click', () => {
+            if (confirm('Сбросить все настройки?')) {
+                localStorage.removeItem(THEME_KEY);
+                localStorage.removeItem(STYLE_KEY);
+                applyTheme('dark');
+                applyStyle('classic');
+                document.querySelectorAll('.toggle-switch').forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-checked', 'false');
+                });
+                document.querySelector('#startupToggle').classList.add('active');
+                document.querySelector('#startupToggle').setAttribute('aria-checked', 'true');
+                document.querySelector('#providersToggle').classList.add('active');
+                document.querySelector('#providersToggle').setAttribute('aria-checked', 'true');
+                document.querySelector('[data-modal="sortModal"]').textContent = 'Авто';
+                document.querySelector('[data-modal="pingModal"]').textContent = 'INCY Ping';
+                closeSettingsPage();
+            }
+        });
+
+        // ============================================================
+        //  POWER LOGIC
+        // ============================================================
+        const powerWrap = document.getElementById('powerWrap');
+        const powerBtn = document.getElementById('powerBtn');
+        const statusText = document.getElementById('statusText');
+        const statusPill = document.getElementById('statusPill');
+        const statusDot = document.getElementById('statusDot');
+        const statusContainer = document.getElementById('statusContainer');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const instrText = document.getElementById('instrText');
+
+        let connected = false;
+        let loading = false;
+        let timerInterval = null;
+        let seconds = 0;
+
+        function startTimer() {
+            seconds = 0;
+            updateTimerDisplay();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                seconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) { clearInterval(timerInterval);
+                timerInterval = null; }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const s = String(seconds % 60).padStart(2, '0');
+            timerDisplay.textContent = `${h}:${m}:${s}`;
+        }
+
+        function setConnected(on) {
+            connected = !!on;
+            loading = false;
+            powerWrap.setAttribute('aria-pressed', String(connected));
+            powerWrap.classList.remove('loading');
+            if (connected) {
+                powerWrap.classList.add('active');
+                statusPill.classList.add('connected');
+                statusText.textContent = 'Подключено';
+                statusDot.style.background = 'var(--status-connected)';
+                statusContainer.classList.add('show-timer');
+                startTimer();
+                instrText.textContent = 'Подключено';
+            } else {
+                powerWrap.classList.remove('active');
+                statusPill.classList.remove('connected');
+                statusText.textContent = 'Не подключено';
+                statusDot.style.background = 'var(--status-disconnected)';
+                statusContainer.classList.remove('show-timer');
+                resetTimer();
+                instrText.textContent = 'Нажмите, чтобы подключиться';
+            }
+            powerWrap.style.pointerEvents = 'auto';
+        }
+
+        function toggleConnection() {
+            if (loading) return;
+            if (connected) {
+                loading = true;
+                powerWrap.style.pointerEvents = 'none';
+                powerWrap.classList.remove('active');
+                powerWrap.classList.add('loading');
+                instrText.textContent = 'Отключение…';
+                setTimeout(() => {
+                    if (loading) {
+                        setConnected(false);
+                        powerWrap.classList.remove('loading');
+                    }
+                }, 1000);
+            } else {
+                loading = true;
+                powerWrap.style.pointerEvents = 'none';
+                powerWrap.classList.add('loading');
+                instrText.textContent = 'Подключение…';
+                setTimeout(() => {
+                    if (loading) {
+                        setConnected(true);
+                        powerWrap.classList.remove('loading');
+                    }
+                }, 1000);
+            }
+        }
+
+        powerWrap.addEventListener('click', toggleConnection);
+        powerWrap.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleConnection();
+            }
+        });
+        powerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleConnection();
+        });
+
+        // ============================================================
+        //  BUTTON STUBS
+        // ============================================================
+        document.getElementById('fromBufferBtn').addEventListener('click', () => alert('➕ Добавление нового сервера'));
+        document.getElementById('qrBtn').addEventListener('click', () => alert('📷 Сканировать QR-код'));
+        document.getElementById('refreshServers').addEventListener('click', function() {
+            this.style.transform = 'scale(0.92) rotate(60deg)';
+            setTimeout(() => { this.style.transform = ''; }, 300);
+            const cards = document.querySelectorAll('.server-card');
+            cards.forEach(c => c.classList.remove('visible'));
+            setTimeout(animateServerCards, 50);
+        });
+
+        // ============================================================
+        //  НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ
+        // ============================================================
+        const navContainer = document.getElementById('navContainer');
+        const navItems = navContainer.querySelectorAll('.nav-item');
+        const indicator = document.getElementById('indicator');
+        let currentNavIndex = 0;
+
+        function setBottomNavActive(index, animate = true) {
+            if (index < 0) index = 0;
+            if (index >= navItems.length) index = navItems.length - 1;
+            navItems.forEach(el => el.classList.remove('active'));
+            navItems[index].classList.add('active');
+            currentNavIndex = index;
+            updateIndicator(index, animate);
+        }
+
+        function updateIndicator(index, animate = true) {
+            const target = navItems[index];
+            if (!target) return;
+            if (!animate) {
+                indicator.classList.add('no-transition');
+            } else {
+                indicator.classList.remove('no-transition');
+            }
+            const containerRect = navContainer.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            const targetWidth = target.offsetWidth;
+            const width = targetWidth * 0.85;
+            let leftOffset = (targetRect.left - containerRect.left) + (targetWidth - width) / 2;
+            indicator.style.transform = `translateX(${leftOffset}px)`;
+            indicator.style.width = width + 'px';
+            if (!animate) {
+                requestAnimationFrame(() => {
+                    indicator.classList.remove('no-transition');
+                });
+            }
+        }
+
+        // Обработчики кликов на пункты панели
+        navItems.forEach((item, idx) => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (idx === 0) {
+                    // VPN – закрываем все страницы, показываем главную
+                    closeSettingsPage();
+                    closeServersPage();
+                    setBottomNavActive(0);
+                } else if (idx === 1) {
+                    // Подписка – открываем сервера
+                    if (!pageServers.classList.contains('active')) {
+                        pageMain.classList.add('slide-out');
+                        pageServers.classList.add('active');
+                        setTimeout(animateServerCards, 100);
+                    }
+                    setBottomNavActive(1);
+                } else if (idx === 2) {
+                    // Настройки
+                    openSettingsPage();
+                    setBottomNavActive(2);
+                }
+            });
+        });
+
+        // Свайп для нижней панели (опционально)
+        let touchStartX = 0,
+            touchStartY = 0;
+        let isSwiping = false;
+
+        navContainer.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            isSwiping = true;
+        }, { passive: true });
+
+        navContainer.addEventListener('touchmove', function(e) {
+            if (isSwiping && e.touches.length === 1) {
+                const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+                if (deltaY > 30) {
+                    isSwiping = false;
+                }
+            }
+        }, { passive: true });
+
+        navContainer.addEventListener('touchend', function(e) {
+            if (!isSwiping) {
+                isSwiping = false;
+                return;
+            }
+            isSwiping = false;
+            const touch = e.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+                let newIndex = currentNavIndex;
+                if (deltaX < 0) newIndex = Math.min(currentNavIndex + 1, navItems.length - 1);
+                else newIndex = Math.max(currentNavIndex - 1, 0);
+                // Имитируем клик
+                navItems[newIndex].click();
+            }
+        }, { passive: true });
+
+        // Обновление индикатора при ресайзе
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => updateIndicator(currentNavIndex), 100);
+        });
+
+        if (window.ResizeObserver) {
+            const ro = new ResizeObserver(() => updateIndicator(currentNavIndex));
+            ro.observe(navContainer);
+        }
+
+        // Инициализация нижней панели
+        setBottomNavActive(0, false);
+
+        // Синхронизация при открытии страниц через другие элементы
+        // уже выполнено в функциях openSettingsPage и т.д.
+
+        // ============================================================
+        //  ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        applyTheme(currentTheme);
+        applyStyle(currentStyle);
+
+        const themeMap = { auto: 'Авто', light: 'Дневная', dark: 'Тёмная' };
+        const styleMap = { classic: 'Классический', compact: 'Компактный' };
+        document.getElementById('themePill').textContent = themeMap[currentTheme] || 'Авто';
+        document.getElementById('stylePill').textContent = styleMap[currentStyle] || 'Классический';
+
+        if (currentStyle === 'compact') {
+            document.getElementById('fromBufferBtn').classList.add('hidden');
+        } else {
+            document.getElementById('fromBufferBtn').classList.remove('hidden');
+        }
+
+        const defaultCard = document.querySelector('.server-card.active[data-server="auto"]');
+        if (defaultCard) {
+            const name = defaultCard.dataset.name;
+            const ping = parseInt(defaultCard.dataset.ping, 10) || 30;
+            const cc = defaultCard.dataset.cc || 'auto';
+            updateMainCards(name, ping, cc);
+        }
+
+        document.querySelector('#startupToggle').classList.add('active');
+        document.querySelector('#startupToggle').setAttribute('aria-checked', 'true');
+        document.querySelector('#providersToggle').classList.add('active');
+        document.querySelector('#providersToggle').setAttribute('aria-checked', 'true');
+
+        console.log('🚀 Vex VPN v0.0.1 — нижняя панель добавлена, история убрана, темы адаптированы');
     </script>
 </body>
 </html>
